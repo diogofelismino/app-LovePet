@@ -21,11 +21,16 @@ export default function TelaSplash({ navigation }:any) {
             }}
             source={logoImg}
             resizeMode='contain'
-            style={{
-                width:  300, 
-                height: 300, 
-                alignSelf: 'center'}}
+            style={{alignSelf: 'center'}}
         />
+        <AnimaTable.Text
+          animation={'bounceOut'}
+          delay={3000}
+          duration={700}
+          style={styles.textAnimacao}
+        >
+          LovePet
+        </AnimaTable.Text>
     </Animated.View>
 </View>
   )

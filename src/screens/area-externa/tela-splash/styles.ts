@@ -8,6 +8,13 @@ const styles = StyleSheet.create({
         alignContent:"center",
         backgroundColor: colors.BACKGROUND_PINK,
         
+    },
+    textAnimacao:{
+        marginTop:10,
+        alignSelf: 'center',
+        color:colors.COLOR_TEXT_BLACK,
+        fontWeight:'600',
+        fontSize:30
     }
 })
 
