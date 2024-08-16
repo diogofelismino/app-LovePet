@@ -23,36 +23,50 @@ interface TextInputPersoProps {
     * @type {string}
     * @default ""
     */
-    value:any,
-    
-        /**
+    value: any,
+
+    /**
     * Deve passar o valor para o input.
     * @type {boolean}
     * @default "false"
     */
-    ehSenha?:boolean
+    ehSenha?: boolean
+
+    /**
+    * Deve passar a função de validação.
+    * @type {any}
+    */
+    validacao?: any
+
+    /**
+    * Deve passar o nome do icone que ficara no lado direito.
+    * @type {string}
+    * @default ""
+    */
+    iconeRight?: any
 }
 
 
-export default function TextInputPerso({titulo, setValue, value, ehSenha=false}:TextInputPersoProps) {
+export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "" }: TextInputPersoProps) {
 
-    const Label = <Text style={{color:COLOR_FONT_INPUT }}>{titulo}</Text>;
+    const Label = <Text style={{ color: COLOR_FONT_INPUT }}>{titulo}</Text>;
 
-    return(
+    return (
         <TextInput
-        label={Label}
-        value={value}
-        onChangeText={text => setValue(text)}
-        mode='outlined'       
-        textColor={COLOR_FONT_INPUT}
-        style={styles.input}  
-        activeOutlineColor={COLOR_FONT_INPUT}
-        outlineColor='transparent'
-        theme={
-            {
-            roundness: 10, 
-          }}
-          secureTextEntry={ehSenha}
+            label={Label}
+            value={value}
+            onChangeText={text => setValue(text)}
+            mode='outlined'
+            textColor={COLOR_FONT_INPUT}
+            style={styles.input}
+            activeOutlineColor={validacao || value.length == 0 ? COLOR_FONT_INPUT : "red"}
+            outlineColor={validacao || value.length == 0 ? 'transparent' : "red"}
+            theme={
+                {
+                    roundness: 10,
+                }}
+            secureTextEntry={ehSenha}
+            right={iconeRight != "" ? <TextInput.Icon icon={iconeRight}  disabled/> : null}
         />
     )
 }

@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Keyboard, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import styles from './styles'
 import TextInputPerso from '../../../components/text-input'
 import { Button } from 'react-native-paper';
+import { validaEmail } from '../../../utils/util';
 
 export default function CadastrarUsuario() {
 
@@ -15,7 +16,7 @@ export default function CadastrarUsuario() {
 
 
     return (
-        <View style={styles.conteiner}>
+        <View style={styles.conteiner}  onTouchStart={() => Keyboard.dismiss()}>
             <View>
                 
             </View>
@@ -30,13 +31,15 @@ export default function CadastrarUsuario() {
                     titulo={"Email"}
                     setValue={setEmail}
                     value={email}
+                    iconeRight={"at"}
+                    validacao={validaEmail(email)}
 
                 />
                 <TextInputPerso
                     titulo={"Nome"}
                     setValue={setNome}
                     value={nome}
-
+                    iconeRight={"account"}
                 />
                 <TextInputPerso
                     titulo={"CPF"}
@@ -49,6 +52,7 @@ export default function CadastrarUsuario() {
                     setValue={setSenha}
                     value={senha}
                     ehSenha
+                    iconeRight={"eye"}
                 />
                 <TextInputPerso
                     titulo={"Confirmar Senha"}

@@ -22,7 +22,15 @@ const estilos = StyleSheet.create({
         backgroundColor:colors.BACKGROUND_INPUT,
         width:'90%',
         marginVertical:5,
-        borderColor:'red'
+
+        
+    },
+
+    textInputError:{
+        backgroundColor:colors.BACKGROUND_INPUT,
+        width:'90%',
+        marginVertical:5,
+
         
     },
     btnBasico:{

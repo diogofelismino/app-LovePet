@@ -4,11 +4,12 @@ import styles from './styles'
 import Logo from "../../../assets/img/Logo.png"
 import { Button, TextInput } from 'react-native-paper'
 import TextInputPerso from '../../../components/text-input'
-import { Value } from 'react-native-reanimated'
 import { COLOR_FONT_INPUT, COLOR_TEXT_BLACK } from '../../../styles/colors'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../config/firebase'
 import { useNavigation } from '@react-navigation/native';
+import { login } from '../../../service/usuario/request-user'
+import { validaEmail } from '../../../utils/util'
 
 export default function Login() {
 
@@ -17,19 +18,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  function login() {
-    signInWithEmailAndPassword(auth, email, senha)
-    .then((userCredencial:any) => {
-      const user = userCredencial.user;
-
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      if(errorCode == "auth/invalid-credential")
-        Alert.alert("Login inválido", "O Email ou a Senha estão incorretos.")
-    });
+  async function logar() {
+    await login(email, senha);
   }
 
   return (
@@ -50,6 +40,7 @@ export default function Login() {
             titulo={"Email"}
             setValue={setEmail}
             value={email}
+            validacao={validaEmail(email)}
           />
 
           <TextInputPerso
@@ -63,7 +54,7 @@ export default function Login() {
             <Text style={{ color: COLOR_FONT_INPUT }}>Esqueceu sua Senha ?</Text>
           </View>
 
-          <Button  mode="contained" style={styles.botao} onPress={() => login()}>
+          <Button  mode="contained" style={styles.botao} onPress={() => logar()}>
             Entrar
           </Button>
 
