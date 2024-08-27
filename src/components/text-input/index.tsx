@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View } from "react-native";
+import { KeyboardType, Text, View } from "react-native";
 import { TextInput } from 'react-native-paper';
 import { COLOR_FONT_INPUT } from '../../styles/colors';
 import styles from './styles';
+import { aplicarMascaraCPF } from '../../utils/mascara';
 
 interface TextInputPersoProps {
 
@@ -44,17 +45,39 @@ interface TextInputPersoProps {
     * @default ""
     */
     iconeRight?: any
+
+    /**
+    * Deve passar a função da mascara caso seja necessario usar
+    * @type {any}
+    * @default ""
+    */
+    mascara?: any
+
+    /**
+    * Deve passar o numero de digito que deve ter no Text Input
+    * @type {number}
+    * @default ""
+    */
+    numeroDeDigito?: number
+
+    /**
+    * Deve passar o tipo do teclado
+    * @type {KeyboardType}
+    * @default ""
+    */
+    tipoTeclado?: KeyboardType
+
 }
 
 
-export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "" }: TextInputPersoProps) {
+export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "", mascara = null, numeroDeDigito, tipoTeclado = "default"}: TextInputPersoProps) {
 
     const Label = <Text style={{ color: COLOR_FONT_INPUT }}>{titulo}</Text>;
 
     return (
         <TextInput
             label={Label}
-            value={value}
+            value={mascara == null ? value : mascara(value)}
             onChangeText={text => setValue(text)}
             mode='outlined'
             textColor={COLOR_FONT_INPUT}
@@ -67,6 +90,8 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
                 }}
             secureTextEntry={ehSenha}
             right={iconeRight != "" ? <TextInput.Icon icon={iconeRight}  disabled/> : null}
+            maxLength={numeroDeDigito}
+            keyboardType={tipoTeclado}
         />
     )
 }

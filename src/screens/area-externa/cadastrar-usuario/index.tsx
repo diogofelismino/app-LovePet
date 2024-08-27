@@ -3,7 +3,9 @@ import React, { useState } from 'react'
 import styles from './styles'
 import TextInputPerso from '../../../components/text-input'
 import { Button } from 'react-native-paper';
-import { validaEmail } from '../../../utils/util';
+import { validaEmail, validarCPF } from '../../../utils/util';
+import HeaderVoltar from '../../../components/header-voltar';
+import { aplicarMascaraCPF } from '../../../utils/mascara';
 
 export default function CadastrarUsuario() {
 
@@ -16,16 +18,10 @@ export default function CadastrarUsuario() {
 
 
     return (
-        <View style={styles.conteiner}  onTouchStart={() => Keyboard.dismiss()}>
-            <View>
-                
-            </View>
-            <View style={{ width: '100%',alignItems:'center'}}>
+        <View style={styles.conteiner} onTouchStart={() => Keyboard.dismiss()}>
+            <HeaderVoltar titulo='Criar Conta' />
 
-                <Text style={styles.textView}>Criar Conta</Text>
-            </View>
             <View style={styles.areaViewCentro}>
-
 
                 <TextInputPerso
                     titulo={"Email"}
@@ -39,12 +35,17 @@ export default function CadastrarUsuario() {
                     titulo={"Nome"}
                     setValue={setNome}
                     value={nome}
-                    iconeRight={"account"}
+                    iconeRight={"account-outline"}
                 />
                 <TextInputPerso
                     titulo={"CPF"}
                     setValue={setCpf}
                     value={cpf}
+                    iconeRight={"card-account-details-outline"}
+                    mascara={aplicarMascaraCPF}
+                    numeroDeDigito={14}
+                    tipoTeclado='numeric'
+                    validacao={validarCPF(cpf)}
 
                 />
                 <TextInputPerso
@@ -52,13 +53,14 @@ export default function CadastrarUsuario() {
                     setValue={setSenha}
                     value={senha}
                     ehSenha
-                    iconeRight={"eye"}
+                    iconeRight={"key-outline"}
                 />
                 <TextInputPerso
                     titulo={"Confirmar Senha"}
                     setValue={setConfirmarSenha}
                     value={confirmarSenha}
                     ehSenha
+                    iconeRight={"key-outline"}
                 />
 
 

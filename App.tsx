@@ -1,6 +1,7 @@
 import React from 'react';
 import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   Text,
@@ -15,7 +16,7 @@ export default function Index() {
   return (
     <PaperProvider 
     settings={{
-      icon: props => <AntDesign {...props} />,
+      icon: props => <MaterialCommunityIcons {...props} />,
     }}
     >
       <SafeAreaView style={{ flex: 1 }}>

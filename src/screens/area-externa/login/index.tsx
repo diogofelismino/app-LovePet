@@ -58,7 +58,7 @@ export default function Login() {
             Entrar
           </Button>
 
-          <View style={{marginTop:20}} onTouchStart={() => {navigation.replace("Cadastro")}}>
+          <View style={{marginTop:20}} onTouchStart={() => {navigation.navigate("Cadastro")}}>
             <Text style={{ color: COLOR_TEXT_BLACK, fontWeight:'bold' }}>Novo Usúario? Cadastre-se</Text>
           </View>
 
