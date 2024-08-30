@@ -1,4 +1,4 @@
-import { Keyboard, StyleSheet, Text, View } from 'react-native'
+import { Alert, Keyboard, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import styles from './styles'
 import TextInputPerso from '../../../components/text-input'
@@ -15,7 +15,31 @@ export default function CadastrarUsuario() {
     const [senha, setSenha] = useState("");
     const [confirmarSenha, setConfirmarSenha] = useState("");
 
+    const validarCampos = () => {
+        if (!nome) {
+            Alert.alert("Erro", "O campo Nome é obrigatório.");
+            return false;
+        }
+        if (!email || !validaEmail(email)) {
+            Alert.alert("Erro", "Insira um email válido.");
+            return false;
+        }
+        if (!cpf || !validarCPF(cpf)) {
+            Alert.alert("Erro", "Insira um CPF válido.");
+            return false;
+        }
+        if (!senha) {
+            Alert.alert("Erro", "O campo Senha é obrigatório.");
+            return false;
+        }
+        if (senha !== confirmarSenha) {
+            Alert.alert("Erro", "As senhas não coincidem.");
+            return false;
+        }
+        return true;
+    };
 
+    
 
     return (
         <View style={styles.conteiner} onTouchStart={() => Keyboard.dismiss()}>
@@ -27,7 +51,7 @@ export default function CadastrarUsuario() {
                     titulo={"Email"}
                     setValue={setEmail}
                     value={email}
-                    iconeRight={"at"}
+                    iconeRight={"at-3"}
                     validacao={validaEmail(email)}
 
                 />
@@ -35,13 +59,13 @@ export default function CadastrarUsuario() {
                     titulo={"Nome"}
                     setValue={setNome}
                     value={nome}
-                    iconeRight={"account-outline"}
+                    iconeRight={"user-3"}
                 />
                 <TextInputPerso
                     titulo={"CPF"}
                     setValue={setCpf}
                     value={cpf}
-                    iconeRight={"card-account-details-outline"}
+                    iconeRight={"vcard-1"}
                     mascara={aplicarMascaraCPF}
                     numeroDeDigito={14}
                     tipoTeclado='numeric'
@@ -53,16 +77,15 @@ export default function CadastrarUsuario() {
                     setValue={setSenha}
                     value={senha}
                     ehSenha
-                    iconeRight={"key-outline"}
+                    iconeRight={"key-3"}
                 />
                 <TextInputPerso
                     titulo={"Confirmar Senha"}
                     setValue={setConfirmarSenha}
                     value={confirmarSenha}
                     ehSenha
-                    iconeRight={"key-outline"}
+                    iconeRight={"key-3"}
                 />
-
 
                 <Button mode="contained" style={styles.botao} onPress={() => console.log("")}>
                     Cadastrar

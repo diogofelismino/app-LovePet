@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import styles from './styles'
 import Icon from '../icon'
-import Icons from '../icon'
+
 import { useNavigation } from '@react-navigation/native'
 
 
@@ -24,7 +24,7 @@ export default function HeaderVoltar({titulo}:HeaderVoltarProps) {
   return (
     <View>
       <View style={{margin:10}}>
-        <Icons name='arrow-left' size={25} acao={() => navigation.goBack()}/>
+        <Icon name='left-4' size={25} onPress={() => navigation.goBack()}/>
       </View>
       <View style={{ width: '100%', alignItems: 'center' }}>
 

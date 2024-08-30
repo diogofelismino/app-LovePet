@@ -4,6 +4,7 @@ import { TextInput } from 'react-native-paper';
 import { COLOR_FONT_INPUT } from '../../styles/colors';
 import styles from './styles';
 import { aplicarMascaraCPF } from '../../utils/mascara';
+import Icon from '../icon';
 
 interface TextInputPersoProps {
 
@@ -89,7 +90,7 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
                     roundness: 10,
                 }}
             secureTextEntry={ehSenha}
-            right={iconeRight != "" ? <TextInput.Icon icon={iconeRight}  disabled/> : null}
+            right={iconeRight != "" ? <TextInput.Icon icon={() => (<Icon name={iconeRight} color={COLOR_FONT_INPUT} size={18}/>)}  disabled/> : null}
             maxLength={numeroDeDigito}
             keyboardType={tipoTeclado}
         />
