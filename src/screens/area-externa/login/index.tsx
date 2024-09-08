@@ -20,6 +20,7 @@ export default function Login() {
 
   async function logar() {
     await login(email, senha);
+    //navegar para proxima tela e trazer os dados do usario e testar e salvar no async storage e criar um loading;
   }
 
   return (
@@ -54,7 +55,7 @@ export default function Login() {
             <Text style={{ color: COLOR_FONT_INPUT }}>Esqueceu sua Senha ?</Text>
           </View>
 
-          <Button  mode="contained" style={styles.botao} onPress={() => logar()}>
+          <Button  mode="contained" textColor='#FFF' style={styles.botao} onPress={() => logar()}>
             Entrar
           </Button>
 

@@ -8,14 +8,11 @@ import HeaderVoltar from '../../../components/header-voltar';
 import { aplicarMascaraCPF } from '../../../utils/mascara';
 import { UsuarioCadastroDto } from '../../../model/Dto/cadastrar-usuario-dto/usuario-cadastro-dto';
 import { RealizarCadastro } from '../../../service/cadastrar-usuario/request-cadastrar-usuario';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CadastrarUsuario() {
 
-    const [email, setEmail] = useState("");
-    const [nome, setNome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [senha, setSenha] = useState("");
-    const [confirmarSenha, setConfirmarSenha] = useState("");
+    const navigation = useNavigation<any>();
 
     const [form, setForm] = useState<UsuarioCadastroDto>(new UsuarioCadastroDto(
         "",
@@ -37,6 +34,7 @@ export default function CadastrarUsuario() {
                     value={form.email}
                     iconeRight={"at-3"}
                     validacao={validaEmail(form.email)}
+                    tipoTeclado='email-address'
 
                 />
                 <TextInputPerso
@@ -71,7 +69,7 @@ export default function CadastrarUsuario() {
                     iconeRight={"key-3"}
                 />
 
-                <Button mode="contained" style={styles.botao} onPress={() => RealizarCadastro(form)}>
+                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => RealizarCadastro(form, navigation)}>
                     Cadastrar
                 </Button>
             </View>

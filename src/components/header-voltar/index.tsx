@@ -24,7 +24,7 @@ export default function HeaderVoltar({titulo}:HeaderVoltarProps) {
   return (
     <View>
       <View style={{margin:10}}>
-        <Icon name='left-4' size={25} onPress={() => navigation.goBack()}/>
+        <Icon name='left-4' color={"#000"} size={25} onPress={() => navigation.goBack()}/>
       </View>
       <View style={{ width: '100%', alignItems: 'center' }}>
 

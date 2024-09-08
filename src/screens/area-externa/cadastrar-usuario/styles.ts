@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     botao:{
         ...estilos.btnBasico,
         width:'90%',
-        marginTop:20
+        marginTop:20,
+        color: "#FFF"
     }
 });
 

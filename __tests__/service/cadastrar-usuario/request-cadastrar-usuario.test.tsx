@@ -1,11 +1,24 @@
-import { validarCampos } from '../../../src/service/cadastrar-usuario/request-cadastrar-usuario'; // Substitua pelo caminho correto
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { UsuarioCadastroDto } from '../../../src/model/Dto/cadastrar-usuario-dto/usuario-cadastro-dto';
+import { RealizarCadastro, validarCampos } from '../../../src/service/cadastrar-usuario/request-cadastrar-usuario'; // Substitua pelo caminho correto
 import { Alert } from 'react-native';
+import { auth } from '../../../src/config/firebase';
 
 jest.mock('react-native', () => ({
     Alert: {
         alert: jest.fn(),
     },
 }));
+
+
+jest.mock('firebase/auth', () => ({
+    createUserWithEmailAndPassword: jest.fn(),
+    getAuth: jest.fn(),
+}));
+
+const mockNavigation = {
+    navigate: jest.fn(),
+};
 
 describe('Teste da função validarCampos', () => {
     beforeEach(() => {
@@ -45,5 +58,25 @@ describe('Teste da função validarCampos', () => {
         const resultado = validarCampos(dados);
         expect(resultado).toBe(true);
         expect(Alert.alert).not.toHaveBeenCalled();
+    });
+});
+
+
+
+describe('RealizarCadastro', () => {
+    it('deve navegar para "Login" quando o cadastro for bem-sucedido', async () => {
+        const mockDados = new UsuarioCadastroDto(
+            'Teste',
+            'teste@example.com',
+            '05403530193',
+            'senha123',
+            'senha123'
+        );
+        (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce({ user: { uid: 'mockedUID' } });
+
+        await RealizarCadastro(mockDados, mockNavigation);
+
+        expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(auth, mockDados.email, mockDados.senha);
+        expect(mockNavigation.navigate).toHaveBeenCalledWith('Login');
     });
 });
