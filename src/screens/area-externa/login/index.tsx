@@ -10,16 +10,25 @@ import { auth } from '../../../config/firebase'
 import { useNavigation } from '@react-navigation/native';
 import { login } from '../../../service/usuario/request-user'
 import { validaEmail } from '../../../utils/util'
+import { useLoading } from '../../../hooks/useLoading'
 
 export default function Login() {
 
   const navigation = useNavigation<any>();
+  const { setLoading } = useLoading();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   async function logar() {
-    await login(email, senha);
+    setLoading(true);
+    //var usuario = await login(email, senha);
+
+    //Pegar dados do usuario com o uid e salvar no ansytore atraves de um redux com hook e navegar pagina ;
+    navigation.replace("RouterAreaLogada");
+
+    setLoading(false);
+
     //navegar para proxima tela e trazer os dados do usario e testar e salvar no async storage e criar um loading;
   }
 

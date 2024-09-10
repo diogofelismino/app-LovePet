@@ -14,19 +14,28 @@ interface HeaderVoltarProps {
   */
   titulo: string,
 
-  
+  /**
+  * Habilita o icone de voltar.
+  * @type {boolean}
+  */
+  voltar?: boolean
+
+
 }
 
-export default function HeaderVoltar({titulo}:HeaderVoltarProps) {
+export default function HeaderVoltar({ titulo, voltar = true }: HeaderVoltarProps) {
 
   const navigation = useNavigation<any>();
 
   return (
     <View>
-      <View style={{margin:10}}>
-        <Icon name='left-4' color={"#000"} size={25} onPress={() => navigation.goBack()}/>
-      </View>
-      <View style={{ width: '100%', alignItems: 'center' }}>
+      {voltar &&
+        <View style={{ margin: 10 }}>
+          <Icon name='left-4' color={"#000"} size={25} onPress={() => navigation.goBack()} />
+        </View>
+      }
+
+      <View style={{ width: '100%', alignItems: 'center', marginVertical: !voltar ? 12 : 0}}>
 
         <Text style={styles.textView}>{titulo}</Text>
       </View>

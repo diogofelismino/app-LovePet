@@ -9,10 +9,12 @@ import { aplicarMascaraCPF } from '../../../utils/mascara';
 import { UsuarioCadastroDto } from '../../../model/Dto/cadastrar-usuario-dto/usuario-cadastro-dto';
 import { RealizarCadastro } from '../../../service/cadastrar-usuario/request-cadastrar-usuario';
 import { useNavigation } from '@react-navigation/native';
+import { useLoading } from '../../../hooks/useLoading';
 
 export default function CadastrarUsuario() {
 
     const navigation = useNavigation<any>();
+    const { setLoading } = useLoading();
 
     const [form, setForm] = useState<UsuarioCadastroDto>(new UsuarioCadastroDto(
         "",
@@ -20,6 +22,12 @@ export default function CadastrarUsuario() {
         "",
         "",
         "",));
+
+    async function cadastrar(){
+        setLoading(true);
+        await RealizarCadastro(form, navigation)
+        setLoading(false);
+    }
 
 
     return (
@@ -69,7 +77,7 @@ export default function CadastrarUsuario() {
                     iconeRight={"key-3"}
                 />
 
-                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => RealizarCadastro(form, navigation)}>
+                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => cadastrar()}>
                     Cadastrar
                 </Button>
             </View>

@@ -11,19 +11,23 @@ import {
 import App from './src';
 import { PaperProvider } from 'react-native-paper';
 import CustomTypeIcon from './src/components/custom-type-icon';
+import { Provider } from 'react-redux';
+import { store } from './src/store/storage';
 
 export default function Index() {
 
   return (
-    <PaperProvider 
-    settings={{
-      icon: props => <CustomTypeIcon {...props} />, 
-    }}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <App />
-      </SafeAreaView>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider
+        settings={{
+          icon: props => <CustomTypeIcon {...props} />,
+        }}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <App />
+        </SafeAreaView>
+      </PaperProvider>
+    </Provider>
 
   )
 }
