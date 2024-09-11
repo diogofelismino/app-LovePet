@@ -8,28 +8,44 @@ import { COLOR_FONT_INPUT, COLOR_TEXT_BLACK } from '../../../styles/colors'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../config/firebase'
 import { useNavigation } from '@react-navigation/native';
-import { login } from '../../../service/usuario/request-user'
+import { login, validarCampos } from '../../../service/usuario/request-user'
 import { validaEmail } from '../../../utils/util'
 import { useLoading } from '../../../hooks/useLoading'
+import { lerDocumento } from '../../../service/request-padrao-firebase'
+import { useUsuario } from '../../../hooks/useUsuario'
 
 export default function Login() {
 
   const navigation = useNavigation<any>();
   const { setLoading } = useLoading();
+  const { signIn, usuario } = useUsuario();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   async function logar() {
     setLoading(true);
-    //var usuario = await login(email, senha);
+    var msg = validarCampos(email, senha);
+    if(!msg){
+      setLoading(false);
+      return;
+    }
 
-    //Pegar dados do usuario com o uid e salvar no ansytore atraves de um redux com hook e navegar pagina ;
+    var user = await login(email, senha);
+
+    if(user == undefined){
+      setLoading(false);
+      return;
+    }
+
+    var dadosUsuario = await lerDocumento("Usuario", user.uid);
+
+    signIn(dadosUsuario, user.stsTokenManager.accessToken)
+
+    console.log(usuario)
     navigation.replace("RouterAreaLogada");
 
     setLoading(false);
-
-    //navegar para proxima tela e trazer os dados do usario e testar e salvar no async storage e criar um loading;
   }
 
   return (

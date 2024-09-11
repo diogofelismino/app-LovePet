@@ -1,14 +1,18 @@
 import React, { useEffect } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import styles from './styles'
 import HeaderVoltar from '../../../components/header-voltar'
 import ButtonRound from '../../../components/button-round'
 import { COLOR_BUTTON } from '../../../styles/colors'
 import AvatarPet from '../../../components/avatar-pet'
-
-
+import { useUsuario } from '../../../hooks/useUsuario'
+import { lerDocumento } from '../../../service/request-padrao-firebase'
+import { useNavigation } from '@react-navigation/native'
 
 export default function Perfis() {
+  
+  const navigation = useNavigation<any>();
+  const { usuario } = useUsuario();
 
   const pets = [//para teste
     { key: '1', name: 'Tom', img: "" },
@@ -18,6 +22,11 @@ export default function Perfis() {
     { key: '5', name: 'Zeus', img: ""  },
     { key: '6', name: 'Loki' , img: "" },
   ];
+
+  useEffect(()=> {
+    // deve aqui colocara função que irar pegar os pets, sera adicionada apos a criação da tela de cadastro de pet.
+    //pegarPet();
+  }, [])
 
   return (
     <View style={styles.conteiner}>
@@ -35,7 +44,6 @@ export default function Perfis() {
         />
       </View>
 
-
       <View style={{ flex: 0.12, alignItems: 'flex-end', justifyContent: 'center', margin: 10 }}>
         <ButtonRound
           color={COLOR_BUTTON}
@@ -46,7 +54,7 @@ export default function Perfis() {
           colorIcon='tranparent'
           colorIconInterno={'#FFF'}
 
-          onClick={() => { }}
+          onClick={() => { navigation.navigate("CadastrarPet") }}
         />
       </View>
     </View>

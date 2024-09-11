@@ -1,8 +1,15 @@
-import { login } from '../../../src/service/usuario/request-user';
+import { login, validarCampos } from '../../../src/service/usuario/request-user';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Alert } from "react-native";
 import { auth } from '../../../src/config/firebase';
  
+jest.mock('react-native', () => ({
+  Alert: {
+      alert: jest.fn(),
+  },
+}));
+
+
 jest.mock('firebase/auth');
 
 jest.mock('../../../src/config/firebase', () => {
@@ -45,3 +52,33 @@ jest.mock('../../../src/config/firebase', () => {
       expect(mockAlert).toHaveBeenCalledWith("Login inválido", "O Email ou a Senha estão incorretos.");
     });
   });
+
+  describe('Teste da função validarCampos', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('deve retornar false e exibir alerta quando o email estiver vazio', () => {
+      const result = validarCampos('', 'senha123');
+      expect(result).toBe(false);
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'O campo Email é obrigatório.');
+    });
+  
+    it('deve retornar false e exibir alerta quando a senha estiver vazia', () => {
+      const result = validarCampos('email@exemplo.com', '');
+      expect(result).toBe(false);
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'O campo Senha é obrigatório.');
+    });
+  
+    it('deve retornar false e exibir alerta quando o email e a senha estiverem vazios', () => {
+      const result = validarCampos('', '');
+      expect(result).toBe(false);
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'O campo Email é obrigatório.O campo Senha é obrigatório.');
+    });
+  
+    it('deve retornar true quando email e senha forem válidos', () => {
+      const result = validarCampos('email@exemplo.com', 'senha123');
+      expect(result).toBe(true);
+      expect(Alert.alert).not.toHaveBeenCalled();
+    });
+});
