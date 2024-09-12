@@ -5,6 +5,7 @@ export const BACKGROUND_INPUT = "#F2E8EB";
 export const COLOR_FONT_INPUT = "#BE91A0";
 export const BACKGROUND_HEARDER = "#DF82A1"
 export const COLOR_FONT_CARD = "#964F66";
+export const MENU_SELECIONADO = "#C49BA8";
 
 
 export const BACKGROUND_CARD_01 = "#FFF6FD";

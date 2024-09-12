@@ -55,5 +55,5 @@ export async function RealizarCadastro(dados: UsuarioCadastroDto, navigation: an
     if (elemento)
         navigation.navigate("Login");
     else
-        Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar Usuario, tente novemante mais terde.")
+        Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar Usuario, tente novemante mais tarde.")
 }

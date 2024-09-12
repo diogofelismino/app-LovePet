@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import styles from './styles'
 import HeaderVoltar from '../../../components/header-voltar'
@@ -7,40 +7,54 @@ import { COLOR_BUTTON } from '../../../styles/colors'
 import AvatarPet from '../../../components/avatar-pet'
 import { useUsuario } from '../../../hooks/useUsuario'
 import { lerDocumento } from '../../../service/request-padrao-firebase'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { pegarPet } from '../../../service/perfis/request-perfis'
+import { useLoading } from '../../../hooks/useLoading'
+import { PetDto } from '../../../model/Dto/pets-dto/pet-dto'
+import { usePet } from '../../../hooks/usePet'
 
 export default function Perfis() {
-  
+
   const navigation = useNavigation<any>();
   const { usuario } = useUsuario();
+  const {deselecionarPet } = usePet();
+  const { setLoading } = useLoading();
+  const [pets, setPets] = useState<PetDto[]>([]);
+  const foco = useIsFocused();
 
-  const pets = [//para teste
-    { key: '1', name: 'Tom', img: "" },
-    { key: '2', name: 'Luky',  img: ""  },
-    { key: '3', name: 'Bob', img: ""  },
-    { key: '4', name: 'Thor', img: ""  },
-    { key: '5', name: 'Zeus', img: ""  },
-    { key: '6', name: 'Loki' , img: "" },
-  ];
+  useEffect(() => {
+    if(foco){
+      deselecionarPet();
+      buscarPet();
+    }
+  }, [foco])
 
-  useEffect(()=> {
-    // deve aqui colocara função que irar pegar os pets, sera adicionada apos a criação da tela de cadastro de pet.
-    //pegarPet();
-  }, [])
+  async function buscarPet() {
+    setLoading(true);
+
+    var dadosPet = await pegarPet(usuario.id);
+    if (dadosPet && Array.isArray(dadosPet)) {
+      setPets(dadosPet as PetDto[]);  // Fazendo um cast explícito para PetDto[]
+    } else {
+      setPets([]);  // Se 'resultado' for 'null', define um array vazio
+    }
+
+    setLoading(false);
+  }
 
   return (
     <View style={styles.conteiner}>
-      <HeaderVoltar titulo='Selecione o perfl de seu pet' voltar={false} />
+      <HeaderVoltar titulo='Selecione o perfil do seu pet' voltar={false} />
 
       <View style={{ flex: 1 }}>
         <FlatList
           data={pets}
           renderItem={({ item }) => (
-            <AvatarPet name={item.name} />
+            <AvatarPet props={item} />
           )}
-          keyExtractor={item => item.key}
+          keyExtractor={item => item.id}
           numColumns={2}
-          columnWrapperStyle={{justifyContent:'space-evenly'}}
+          columnWrapperStyle={{ justifyContent: 'space-evenly' }}
         />
       </View>
 
@@ -48,8 +62,8 @@ export default function Perfis() {
         <ButtonRound
           color={COLOR_BUTTON}
           icone='plus-2'
-          tamanhoButton={40}
-          size={24}
+          tamanhoButton={50}
+          size={20}
           colorBorder={'transparent'}
           colorIcon='tranparent'
           colorIconInterno={'#FFF'}

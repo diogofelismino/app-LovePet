@@ -42,7 +42,6 @@ export default function Login() {
 
     signIn(dadosUsuario, user.stsTokenManager.accessToken)
 
-    console.log(usuario)
     navigation.replace("RouterAreaLogada");
 
     setLoading(false);

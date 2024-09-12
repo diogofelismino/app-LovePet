@@ -9,11 +9,18 @@ import { PetDto } from '../../../model/Dto/pets-dto/pet-dto'
 import DropDownPicker from 'react-native-dropdown-picker'
 import styles from './styles'
 import { Button } from 'react-native-paper'
-import { calcularIdade } from '../../../service/cadastrar-pet/request-cadastar-pet'
+import { calcularIdade, RealizarCadastroPet } from '../../../service/cadastrar-pet/request-cadastar-pet'
+import { useLoading } from '../../../hooks/useLoading'
+import { useUsuario } from '../../../hooks/useUsuario'
+import { useNavigation } from '@react-navigation/native'
 
 export default function CadastrarPet() {
 
-    const [form, setForm] = useState<PetDto>(new PetDto("", "", 0, "", ""));
+    const { setLoading } = useLoading();
+    const { usuario } = useUsuario();
+    const navigation = useNavigation();
+
+    const [form, setForm] = useState<PetDto>(new PetDto("", "", 0, "", "", ""));
 
     const [ano, setAno] = useState("");
     const [open, setOpen] = useState(false);
@@ -34,14 +41,23 @@ export default function CadastrarPet() {
     const [mes, setMes] = useState<number>(0);
 
     useEffect(() => {
-        if(ano && mes)
-            setForm({...form, idade: calcularIdade(Number(ano), mes)})
+        if (ano && mes)
+            setForm({ ...form, idade: calcularIdade(Number(ano), mes), data_pet: `${mes}/${ano}` })
     }, [ano, mes]);
+
+    async function cadastroPet() {
+        setLoading(true);
+
+        await RealizarCadastroPet(form, usuario.id, navigation);
+
+
+        setLoading(false);
+    }
 
     return (
         <ContainerAreaLogada nomeTela='Cadastrar pet' iconBack >
-            <ScrollView style={{ flex: 1, width: '100%'}} scrollEnabled={!open } showsVerticalScrollIndicator={false}>
-                <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll/>
+            <ScrollView style={{ flex: 1, width: '100%' }} scrollEnabled={!open} showsVerticalScrollIndicator={false}>
+                <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
                 <View style={styles.viewCentro}>
                     <TextInputPerso
                         titulo={"Nome do pet"}
@@ -94,8 +110,8 @@ export default function CadastrarPet() {
                     />
 
 
-                    <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => console.log(form)}>
-                        Entrar
+                    <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => cadastroPet()}>
+                        Registar
                     </Button>
 
                 </View>

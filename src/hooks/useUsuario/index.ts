@@ -2,11 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, logout, restoreSession } from "../../store/usuario/usuario";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
+import { UsuarioCadastroDto } from "../../model/Dto/cadastrar-usuario-dto/usuario-cadastro-dto";
+import { UsuarioDto } from "../../model/Dto/usuario-dto/usuario-dto";
 
 
 export const useUsuario = () => {
     const dispatch = useDispatch();
-    const usuario = useSelector((state:any) => state.usuario);
+    const usuario: UsuarioDto = useSelector((state:any) => state.usuario);
   
     // Função para realizar o login
     const signIn = async (usuario:any, token:any) => {

@@ -39,7 +39,6 @@ export async function lerDocumento(path:any, id:any = null) {
             if (docSnap.exists()) {
                 return docSnap.data();
             } else {
-                console.log("Nenhum documento encontrado.");
                 return null;
             }
         } else {
