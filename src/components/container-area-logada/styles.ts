@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import * as color from "../../styles/colors";
 
-const styles = (iconBack: boolean = false) => StyleSheet.create({
+const styles = (iconBack: boolean = false, home: boolean = false) => StyleSheet.create({
     viewGeral: {
         flex: 1,
         backgroundColor: '#FFF',
@@ -20,26 +20,37 @@ const styles = (iconBack: boolean = false) => StyleSheet.create({
         },
         shadowOpacity: 0.27,
         shadowRadius: 4.65,
-
         elevation: 6,
+        paddingHorizontal: home ? 10 : 0
     },
     viewTitulo: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: iconBack ? "flex-start" : "center",
-        marginBottom: 10,
+        alignItems:  "center",
+        marginBottom: home ? 0 : 10,
     },
     viewIcon: {
-        flex: 0.45,
+        flex: 1,
         justifyContent: 'center',
         marginLeft: 10,
         marginBottom: 10,
     },
     fontTitle: {
-        fontSize: 20,
+        fontSize: home ? 28 : 20,
         color: 'black',
-        fontWeight:"500"
-    }
+        fontWeight: home ? "700" : "500"
+    },
+    viewBtnMenu: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+
+    viewBtnSair: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        flexDirection: 'row',
+        alignItems: 'center',      
+    },
 
 });
 

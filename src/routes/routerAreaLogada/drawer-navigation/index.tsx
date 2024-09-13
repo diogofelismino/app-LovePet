@@ -5,6 +5,9 @@ import * as pallete from "../../../styles/colors";
 import styles from './styles';
 import Icon from '../../../components/icon';
 import Home from '../../../screens/area-logada/home';
+import DrawerDashBoardComponent from './componente-drawer-navigation';
+import Agenda from '../../../screens/area-logada/agenda';
+import RouterAgenda from './router-agenda';
 
 const Drawer = createDrawerNavigator();
 
@@ -12,19 +15,20 @@ export default function RouterHomeDrawerNavigation() {
     return (
         <Drawer.Navigator
             initialRouteName='Home'
-            //drawerContent={(props) => <DrawerDashBoardExterno {...props} />}
+            drawerContent={(props) => <DrawerDashBoardComponent {...props} />}
             screenOptions={({ route }) => ({
                 headerShown: false,
                 swipeEnabled: false,
-                drawerInactiveTintColor: pallete.BACKGROUND_CARD_02,
+                drawerInactiveTintColor: pallete.COLOR_TEXT_BLACK,
                 drawerActiveBackgroundColor: pallete.MENU_SELECIONADO,
                 drawerActiveTintColor: pallete.COLOR_TEXT_BLACK,
-                drawerInactiveBackgroundColor: pallete.COLOR_TEXT_BLACK,
+                drawerInactiveBackgroundColor: pallete.BACKGROUND_CARD_02,           
                 drawerLabelStyle: { fontSize: 19 },
                 drawerItemStyle: {
-                    borderRadius: 20,
-                    marginVertical: 0,
-                    borderColor: 'transparent'
+                    borderRadius: 12,
+                    marginVertical: 5,
+                    borderColor: 'transparent',
+                  
                 },
 
                 drawerIcon: ({ color }) => {
@@ -36,7 +40,7 @@ export default function RouterHomeDrawerNavigation() {
                         case 'Vacinas':
                             icon = 'eyedropper';
                             break;
-                        case "PerfilPet":
+                        case "Perfil Do Pet":
                             icon = 'paw';
                             break
                         case "Agenda":
@@ -53,9 +57,9 @@ export default function RouterHomeDrawerNavigation() {
             })}
         >
             <Drawer.Screen name='Home' component={Home} />
-            {/* <Drawer.Screen name="Vacinas" component={RouterSorteios} />
-            <Drawer.Screen name="Vacinas" component={SingIn} />
-            <Drawer.Screen name="Agenda" component={RouterCadastro} /> */}
+            <Drawer.Screen name="Vacinas" component={Home} />
+            <Drawer.Screen name="Agenda" component={RouterAgenda} />
+            <Drawer.Screen name="Perfil Do Pet" component={Home} />
 
         </Drawer.Navigator>
     )

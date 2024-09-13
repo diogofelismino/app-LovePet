@@ -31,8 +31,8 @@ export default function Perfis() {
 
   async function buscarPet() {
     setLoading(true);
-
-    var dadosPet = await pegarPet(usuario.id);
+    var dadosPet = await pegarPet(usuario.usuario.id);
+    console.log(dadosPet)
     if (dadosPet && Array.isArray(dadosPet)) {
       setPets(dadosPet as PetDto[]);  // Fazendo um cast explícito para PetDto[]
     } else {

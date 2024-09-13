@@ -6,6 +6,7 @@ export const COLOR_FONT_INPUT = "#BE91A0";
 export const BACKGROUND_HEARDER = "#DF82A1"
 export const COLOR_FONT_CARD = "#964F66";
 export const MENU_SELECIONADO = "#C49BA8";
+export const BACKGROUND_MINI_MENU = "#EBC9D4";
 
 
 export const BACKGROUND_CARD_01 = "#FFF6FD";
@@ -19,4 +20,5 @@ export const BACKGROUND_CARD_08 = "#BEEEFD";
 export const BACKGROUND_CARD_09 = "#71C1DA"; 
 
 export const COLOR_TEXT_BLACK = "#000000"
+export const COLOR_WHITE = "#FFFFFF"
 

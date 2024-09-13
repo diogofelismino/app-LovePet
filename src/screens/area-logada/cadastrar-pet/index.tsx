@@ -48,7 +48,7 @@ export default function CadastrarPet() {
     async function cadastroPet() {
         setLoading(true);
 
-        await RealizarCadastroPet(form, usuario.id, navigation);
+        await RealizarCadastroPet(form, usuario.usuario.id, navigation);
 
 
         setLoading(false);

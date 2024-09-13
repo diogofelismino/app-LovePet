@@ -55,7 +55,7 @@ export async function RealizarCadastroPet(dados: PetDto, usuarioId: any, navigat
         return;
     }
 
-    var id = await verificarIdPet("123123");
+    var id = await verificarIdPet(usuarioId);
     dados.id = id;
 
     const elemento = await criarDocumento(`Usuario/${usuarioId}/pets`, dados, dados.id);

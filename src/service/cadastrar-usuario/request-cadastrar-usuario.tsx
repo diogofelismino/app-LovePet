@@ -35,25 +35,38 @@ export const validarCampos = (dados: UsuarioCadastroDto) => {
 
 
 export async function RealizarCadastro(dados: UsuarioCadastroDto, navigation: any) {
-    if (!validarCampos(dados)) {
-        return;
+    try{
+        if (!validarCampos(dados)) {
+            return;
+        }
+    
+        const userCredential = await createUserWithEmailAndPassword(auth, dados.email, dados.senha);
+        const user = userCredential.user;
+    
+        var usuario = {
+            nome: dados.nome,
+            senha: cripitografarSenha(dados.senha),
+            cpf: dados.cpf,
+            email: dados.email,
+            id: user.uid.toString()
+        }
+    
+        const elemento = await criarDocumento("Usuario", usuario, usuario.id);
+    
+        if (elemento)
+            navigation.navigate("Login");
+        else
+            Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar Usuario, tente novemante mais tarde.")
     }
-
-    const userCredential = await createUserWithEmailAndPassword(auth, dados.email, dados.senha);
-    const user = userCredential.user;
-
-    var usuario = {
-        nome: dados.nome,
-        senha: cripitografarSenha(dados.senha),
-        cpf: dados.cpf,
-        email: dados.email,
-        id: user.uid.toString()
+    catch(erro:any){
+        const errorCode = erro.code;
+        const errorMessage = erro.message;
+    
+        if (errorCode === 'auth/email-already-in-use') {
+           Alert.alert("Aviso", "Esse e-mail já está em uso.");
+        } else {
+           Alert.alert("Aviso", "Erro ao criar usuário: " +  errorMessage);
+        }
     }
-
-    const elemento = await criarDocumento("Usuario", usuario, usuario.id);
-
-    if (elemento)
-        navigation.navigate("Login");
-    else
-        Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar Usuario, tente novemante mais tarde.")
+   
 }
