@@ -33,7 +33,7 @@ export default function Agenda() {
                     colorIcon='tranparent'
                     colorIconInterno={'#FFF'}
 
-                    onClick={() => { navigation.navigate("") }}
+                    onClick={() => { navigation.navigate("Cadastrar Compromisso") }}
                 />
             </View>
         </ContainerAreaLogada>

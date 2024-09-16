@@ -20,7 +20,6 @@ export default function TelaSplash({ navigation }:any) {
             delay={3000}
             duration={700}
             onAnimationEnd={() => {
-              console.log(usuario)
                     if(usuario.token)
                       navigation.replace("RouterAreaLogada");
                     else 

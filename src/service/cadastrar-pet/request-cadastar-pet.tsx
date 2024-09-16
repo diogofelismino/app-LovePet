@@ -43,8 +43,12 @@ export function calcularIdade(ano: number, mes: number) {
 
 export async function verificarIdPet(usuarioId: any) {
     var pets = await lerDocumento(`Usuario/${usuarioId}/pets`)
-    if (pets?.length > 0  && Array.isArray(pets))
-        return (Number(pets[pets!.length - 1]?.id) + 1).toString()
+    if (pets?.length > 0  && Array.isArray(pets)){
+        const maxId = Math.max(...pets.map((item: any) => Number(item.id)));
+        // Retornar o próximo ID como string
+        return (maxId + 1).toString();
+
+    }
     else
         return '1'
 }

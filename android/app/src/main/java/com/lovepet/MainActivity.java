@@ -1,6 +1,10 @@
 package com.lovepet;
 
+import android.app.AlarmManager;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -27,7 +31,7 @@ public class MainActivity extends ReactActivity {
     return new MainActivityDelegate(this, getMainComponentName());
   }
 
-  public static class MainActivityDelegate extends ReactActivityDelegate {
+  public class MainActivityDelegate extends ReactActivityDelegate {
     public MainActivityDelegate(ReactActivity activity, String mainComponentName) {
       super(activity, mainComponentName);
     }
@@ -50,6 +54,16 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(null);
+    }
+
+    private void checkAndRequestExactAlarmPermission() {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+          AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+          if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
+              Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+              startActivity(intent);
+          }
+      }
     }
   }
 }

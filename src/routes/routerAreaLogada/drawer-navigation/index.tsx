@@ -6,7 +6,6 @@ import styles from './styles';
 import Icon from '../../../components/icon';
 import Home from '../../../screens/area-logada/home';
 import DrawerDashBoardComponent from './componente-drawer-navigation';
-import Agenda from '../../../screens/area-logada/agenda';
 import RouterAgenda from './router-agenda';
 
 const Drawer = createDrawerNavigator();

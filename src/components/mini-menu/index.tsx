@@ -18,7 +18,6 @@ export default function MiniMenu() {
     const [visible, setVisible] = useState(false);
 
     const openMenu = () => {
-        console.log('aasd')
         setVisible(true);
     }
 
