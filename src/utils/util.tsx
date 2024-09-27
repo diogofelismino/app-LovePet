@@ -50,7 +50,11 @@ export async function verificarId(caminho: any) {
     return '1'
 }
 
-export function validateDateTime(dateTime: any) {
+export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) {
+
+  if(editarPrimeira)
+    return true;
+
   if (!dateTime || typeof dateTime !== 'string') {
     return false;
   }

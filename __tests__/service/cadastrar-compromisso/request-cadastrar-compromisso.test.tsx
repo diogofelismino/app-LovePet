@@ -107,7 +107,7 @@ describe('AgendarNotificacao', () => {
     });
 
     test('deve solicitar permissão, criar um canal e agendar uma notificação', async () => {
-        const data = 'Sun Sep 15 2024 14:30:00 GMT-0300'; // Data e hora no formato ISO Sun Dec 01 2024 23:59:00 GMT-0300
+        const data = 'Sun Sep 15 2024 14:30:00 GMT-0400'; // GMT-0300
         const titulo = 'Reunião';
 
         // Call the function to schedule the notification

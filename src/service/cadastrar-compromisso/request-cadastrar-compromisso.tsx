@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import { CadastrarCompromissoDto } from "../../model/Dto/cadastrar-compomisso-dto/cadastrar-compromisso-dto";
 import { validateDateTime, verificarId } from "../../utils/util";
-import { criarDocumento } from "../request-padrao-firebase";
+import { criarDocumento, lerDocumento } from "../request-padrao-firebase";
 import notifee, { AndroidImportance, TimestampTrigger, TriggerType } from '@notifee/react-native';
 
 
@@ -55,7 +55,7 @@ export async function AgendarNotificacao(data: any, titulo: string) {
 
     await notifee.createTriggerNotification({
         title: `${titulo}`,
-        body: `Horario agendado: ${date.getHours()}:${date.getMinutes()}`,
+        body: `Horario agendado: ${date.getHours()}:${date.getMinutes() < 10 ?( "0"+date.getMinutes()) : date.getMinutes()}`,
         android: { channelId },
     }, trigger);
 }
@@ -66,10 +66,12 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
         return;
     }
 
-    dados.data_hora = mudarData(dados.data_hora);
+    var data = dados.data_hora;
+    data = mudarData(data);
+
 
     if (geraLembre)
-        await AgendarNotificacao(dados.data_hora, dados.titulo);
+        await AgendarNotificacao(data, dados.titulo);
 
     dados.id = await verificarId(`Usuario/${usuarioId}/pets/${petId}/Compromisso`);
 
@@ -81,4 +83,9 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
     else
         Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar o Compromisso, tente novemante mais tarde.")
 
+}
+
+export async function PegarCompromisso(usuarioId: any, petId: any, compomissoId:any) {
+    var compromissos = await lerDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, compomissoId)
+    return compromissos;
 }

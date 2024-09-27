@@ -53,6 +53,27 @@ interface CardImgTituloProps {
     */
     nomeTelaNavegacao?: string
 
+    /**
+    * Deve Passar quando o nomeTelaNavegacao for passado e nele deve conter os dado que serão enviado para a outra tela.
+    * @type {string}
+    * @default ""
+    */
+    paramNavigate?: any;
+
+    /**
+    * Deve Passar o tamanho da fonte do titulo.
+    * @type {number}
+    * @default 20
+    */
+    fontTitulo?: number
+
+    /**
+    * Deve Passar o tamanho da fonte do subtitulo.
+    * @type {number}
+    * @default 24
+    */
+    fontSubTitulo?: number
+
 
 }
 
@@ -72,18 +93,19 @@ export default function CardImgTitulo(props: CardImgTituloProps) {
         pallete.BACKGROUND_CARD_09
     ]
 
-    const style = styles(color[Math.floor(Math.random() * color.length)], props.flex);
+    const style = styles(color[Math.floor(Math.random() * color.length)], props.flex, props.fontTitulo, props.fontSubTitulo);
 
     return (
         <TouchableOpacity style={style.card} onPress={() => {
+            
 
             if (props.agedarRegistrar)
                 navigation.navigate(props.nomeTelaNavegacao);
             else
-                navigation.navigate(props.nomeTelaNavegacao);// vai mudar provavel passarei dado por rota;
+                navigation.navigate(props.nomeTelaNavegacao, {param: props.paramNavigate});// vai mudar provavel passarei dado por rota;
         }}>
             <View style={style.viewImg}>
-                <Image source={props.ehVacina ? ImagemVacina : ImagemCalendario} resizeMode='contain' style={{ width: '70%', height:'60%' }} />
+                <Image source={props.ehVacina ? ImagemVacina : ImagemCalendario} resizeMode='contain' style={{ width: '70%', height: '60%' }} />
             </View>
 
             <View style={style.viewTexto}>

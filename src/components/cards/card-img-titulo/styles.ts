@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import * as pallete from '../../../styles/colors';
 
 
-const styles = (backgroundColor: string, flex: boolean = false) => StyleSheet.create({
+const styles = (backgroundColor: string, flex: boolean = false, fontTitulo:number = 20,  fontSubTitulo:number = 24) => StyleSheet.create({
     card: {
         backgroundColor: backgroundColor,
         borderRadius: 15,
@@ -34,7 +34,7 @@ const styles = (backgroundColor: string, flex: boolean = false) => StyleSheet.cr
 
     viewTexto: {
         backgroundColor: '#FFF',
-        flex: 2.5,
+        flex: 1.8,
         borderBottomEndRadius: 15,
         borderTopEndRadius: 15,
         borderEndColor: backgroundColor,
@@ -42,12 +42,12 @@ const styles = (backgroundColor: string, flex: boolean = false) => StyleSheet.cr
         justifyContent: 'center',
     },
     textTitulo: {
-        fontSize: 20,
+        fontSize: fontTitulo,
         fontWeight: '600',
         color: pallete.COLOR_FONT_CARD,
     },
     textSubtitulo: {
-        fontSize: 24,
+        fontSize: fontSubTitulo,
         fontWeight: '600',
         color: pallete.COLOR_FONT_CARD,
         marginTop: 10,

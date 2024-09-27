@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ContainerAreaLogada from '../../../components/container-area-logada'
 import { ScrollView } from 'react-native-gesture-handler'
 import CardImagem from '../../../components/cards/card-imagem'
@@ -9,25 +9,39 @@ import styles from './styles'
 import * as color from '../../../styles/colors'
 import logoImg from "../../../assets/img/calendario.png"
 import { CadastrarCompromissoDto } from '../../../model/Dto/cadastrar-compomisso-dto/cadastrar-compromisso-dto'
-import { useNavigation } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useLoading } from '../../../hooks/useLoading'
 import { useUsuario } from '../../../hooks/useUsuario'
 import { usePet } from '../../../hooks/usePet'
-import { RegistrarCompromisso } from '../../../service/cadastrar-compromisso/request-cadastrar-compromisso'
+import { PegarCompromisso, RegistrarCompromisso } from '../../../service/cadastrar-compromisso/request-cadastrar-compromisso'
 import { validateDateTime } from '../../../utils/util'
 import { aplicarMascaraDateTime } from '../../../utils/mascara'
+import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-dto'
 
 
 export default function CadastrarCompromisso() {
+
+    const route: RouteProp<{
+        params: {
+            param: any
+        }
+    }, 'params'> = useRoute();
 
     const navigation = useNavigation();
     const { setLoading } = useLoading();
     const { usuario } = useUsuario();
     const { pet } = usePet();
 
-
-    const [form, setForm] = useState<CadastrarCompromissoDto>(new CadastrarCompromissoDto(null, "", "", null));// vai mudar o tipo
+    const [form, setForm] = useState<CadastrarCompromissoDto>(new CadastrarCompromissoDto(null, "", "", ""));// vai mudar o tipo
     const [notificar, setNotficar] = useState<boolean>(false);
+    const [primeira, setPrimeira] = useState(false);
+
+
+    useEffect(() => {
+        if(route.params)
+            RecuperarCompromisso();
+    }, []);
+
 
     async function Cadastar() {
         setLoading(true);
@@ -37,8 +51,31 @@ export default function CadastrarCompromisso() {
         setLoading(false);
     }
 
+    async function Excluir() {
+
+    }
+
+    async function Editar() {
+    }
+
+    async function RecuperarCompromisso() {
+        setLoading(true);
+        const dado = await PegarCompromisso(usuario.usuario.id, pet.id, route.params.param);
+        const compromisso = dado as CompromissoDto;      
+        setForm({...form, titulo: compromisso.titulo, data_hora: compromisso.data_hora, descricao: compromisso.descricao, id: compromisso.id});
+
+        if(compromisso.data_hora < new Date())
+            setNotficar(true);
+
+        setPrimeira(true);
+
+        
+
+        setLoading(false);
+    }
+
     return (
-        <ContainerAreaLogada nomeTela='Agenda' iconBack >
+        <ContainerAreaLogada nomeTela={route.params?.param == undefined || route.params?.param == "" ? 'Agenda' : "Alterar dados da agenda"} iconBack >
             <ScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
                 <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
                 <View style={styles.viewCentro}>
@@ -49,24 +86,35 @@ export default function CadastrarCompromisso() {
                     />
                     <TextInputPerso
                         titulo={"Data"}
-                        setValue={(text: any) => setForm({ ...form, data_hora: text })}
+                        setValue={(text: any) =>{ setForm({ ...form, data_hora: text }), setPrimeira(false)}}
                         value={form.data_hora}
                         iconeRight={"calendar-7"}
-                        validacao={validateDateTime}
+                        validacao={validateDateTime(form.data_hora, primeira)}
                         mascara={aplicarMascaraDateTime}
                         numeroDeDigito={16}
                     />
-                    <View style={{flexDirection:'row', width: '90%', alignItems: 'center', marginVertical: 25, justifyContent:'flex-start' }}>
+                    <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center', marginVertical: 25, justifyContent: 'flex-start' }}>
 
-                        <Switch value={notificar} onValueChange={setNotficar} color={color.COLOR_BUTTON}/>
-                        <Text style={{ marginRight: 10, fontSize:15, color:'#000' }}>Receber lembretes automáticos</Text>
+                        <Switch value={notificar} onValueChange={setNotficar} color={color.COLOR_BUTTON} />
+                        <Text style={{ marginRight: 10, fontSize: 15, color: '#000' }}>Receber lembretes automáticos</Text>
                     </View>
 
+                    {route.params?.param == undefined || route.params?.param == "" ?
 
-                    <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Cadastar()}>
-                        Registar
-                    </Button>
+                        <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Cadastar()}>
+                            Registar
+                        </Button>
+                        :
+                        <>
+                            <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Excluir()}>
+                                Excluir eventos
+                            </Button>
 
+                            <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Editar()}>
+                                Salvar
+                            </Button>
+                        </>
+                    }
                 </View>
             </ScrollView>
         </ContainerAreaLogada>

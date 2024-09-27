@@ -24,7 +24,7 @@ const styles = (iconBack: boolean = false, home: boolean = false) => StyleSheet.
         paddingHorizontal: home ? 10 : 0
     },
     viewTitulo: {
-        flex: 1,
+        flex: 3,
         justifyContent: 'center',
         alignItems:  "center",
         marginBottom: home ? 0 : 10,
