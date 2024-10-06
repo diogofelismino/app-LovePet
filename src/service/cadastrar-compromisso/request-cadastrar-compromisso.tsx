@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import { CadastrarCompromissoDto } from "../../model/Dto/cadastrar-compomisso-dto/cadastrar-compromisso-dto";
-import { validateDateTime, verificarId } from "../../utils/util";
-import { criarDocumento, lerDocumento } from "../request-padrao-firebase";
+import { mudarData, validateDateTime, verificarId } from "../../utils/util";
+import { criarDocumento, deletarDocumento, lerDocumento, updateDocumento } from "../request-padrao-firebase";
 import notifee, { AndroidImportance, TimestampTrigger, TriggerType } from '@notifee/react-native';
 
 
@@ -26,23 +26,15 @@ export function validarCampos(dados: CadastrarCompromissoDto) {
     return true;
 }
 
-export function mudarData(date: any) {
-    const [datePart, timePart] = date.split(' ');
-    const [day, month, year] = datePart.split("/");
-    const [hours, minutes] = timePart.split(':');
-    const dateObject = new Date(year, month - 1, day, hours, minutes);
 
-    return dateObject.toString();
-}
-
-export async function AgendarNotificacao(data: any, titulo: string) {
+export async function AgendarNotificacao(data: any, titulo: string, idCompromisso:any = "default") {
 
     const date = new Date(data);
 
     await notifee.requestPermission()
 
     const channelId = await notifee.createChannel({
-        id: 'default',
+        id: idCompromisso,
         name: 'Compromissos',
         importance: AndroidImportance.HIGH,
     });
@@ -69,11 +61,10 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
     var data = dados.data_hora;
     data = mudarData(data);
 
+    dados.id = await verificarId(`Usuario/${usuarioId}/pets/${petId}/Compromisso`);
 
     if (geraLembre)
-        await AgendarNotificacao(data, dados.titulo);
-
-    dados.id = await verificarId(`Usuario/${usuarioId}/pets/${petId}/Compromisso`);
+        await AgendarNotificacao(data, dados.titulo, dados.id);
 
     const elemento = await criarDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, dados, dados.id);
 
@@ -89,3 +80,47 @@ export async function PegarCompromisso(usuarioId: any, petId: any, compomissoId:
     var compromissos = await lerDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, compomissoId)
     return compromissos;
 }
+
+export async function EditarCompromisso(dados: CadastrarCompromissoDto, usuarioId: any, petId: any, navigation: any, geraLembre: boolean) {
+    try{
+
+        if (!validarCampos(dados)) {
+            return;
+        }
+    
+        var data = dados.data_hora;
+        data = mudarData(data);
+    
+        await updateDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, dados.id, dados);
+
+        if (geraLembre)
+            await AgendarNotificacao(data, dados.titulo, dados.id);
+
+        Alert.alert("Aviso", "Compromisso atualizado com sucesso");
+        navigation.navigate("Agenda");
+    }
+    catch(error) {
+        Alert.alert("Aviso", "Ocorreu um erro ao tentar Editar o Compromisso, tente novemante mais tarde.");
+    }
+}
+
+export async function ExcluirCompromisso(usuarioId: any, petId: any, compromissoId:any, navigation: any) {
+    try {
+
+        await deletarDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, compromissoId);
+        await cancelarNotificacao(compromissoId);
+        
+        Alert.alert("Aviso", "Compromisso foi excluido com sucesso");
+        navigation.navigate("Agenda");
+    } catch (error) {
+        Alert.alert("Aviso", "Ocorreu um erro ao tentar Excluir o Compromisso, tente novemante mais tarde.");
+    }
+}
+
+export async function cancelarNotificacao(idNotificacao:any) {
+    try {
+      await notifee.cancelNotification(idNotificacao);
+    } catch (error) {
+      console.error('Erro ao cancelar a notificação:', error);
+    }
+  }

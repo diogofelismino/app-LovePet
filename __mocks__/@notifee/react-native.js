@@ -2,7 +2,8 @@ const notifee = {
     displayNotification: jest.fn(),
     requestPermission: jest.fn().mockResolvedValue(true),
     createChannel: jest.fn().mockResolvedValue('mockChannelId'),
-    createTriggerNotification: jest.fn().mockResolvedValue(undefined)
+    createTriggerNotification: jest.fn().mockResolvedValue(undefined),
+    cancelNotification: jest.fn()
   };
   
  

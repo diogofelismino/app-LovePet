@@ -13,8 +13,8 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useLoading } from '../../../hooks/useLoading'
 import { useUsuario } from '../../../hooks/useUsuario'
 import { usePet } from '../../../hooks/usePet'
-import { PegarCompromisso, RegistrarCompromisso } from '../../../service/cadastrar-compromisso/request-cadastrar-compromisso'
-import { validateDateTime } from '../../../utils/util'
+import { EditarCompromisso, ExcluirCompromisso, PegarCompromisso, RegistrarCompromisso } from '../../../service/cadastrar-compromisso/request-cadastrar-compromisso'
+import { mudarData, validateDateTime } from '../../../utils/util'
 import { aplicarMascaraDateTime } from '../../../utils/mascara'
 import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-dto'
 
@@ -52,10 +52,19 @@ export default function CadastrarCompromisso() {
     }
 
     async function Excluir() {
+        setLoading(true);
 
+        await ExcluirCompromisso(usuario.usuario.id, pet.id, form.id, navigation);
+
+        setLoading(false);
     }
 
     async function Editar() {
+        setLoading(true);
+
+        await EditarCompromisso(form, usuario.usuario.id, pet.id, navigation, notificar)
+
+        setLoading(false);
     }
 
     async function RecuperarCompromisso() {
@@ -64,7 +73,9 @@ export default function CadastrarCompromisso() {
         const compromisso = dado as CompromissoDto;      
         setForm({...form, titulo: compromisso.titulo, data_hora: compromisso.data_hora, descricao: compromisso.descricao, id: compromisso.id});
 
-        if(compromisso.data_hora < new Date())
+        var data = new Date(mudarData(compromisso.data_hora))
+
+        if(data > new Date())
             setNotficar(true);
 
         setPrimeira(true);

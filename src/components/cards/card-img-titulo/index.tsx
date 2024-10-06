@@ -109,7 +109,7 @@ export default function CardImgTitulo(props: CardImgTituloProps) {
             </View>
 
             <View style={style.viewTexto}>
-                <Text style={style.textTitulo}>{props.titulo}</Text>
+                <Text style={style.textTitulo} ellipsizeMode='tail' numberOfLines={3}>{props.titulo}</Text>
                 {props.subTitulo &&
                     <Text style={style.textSubtitulo}>{props.subTitulo}</Text>
                 }

@@ -1,5 +1,5 @@
 import { lerDocumento } from "../../src/service/request-padrao-firebase";
-import { cripitografarSenha, validaEmail, validarCPF, validateDateTime, verificarId } from "../../src/utils/util"
+import { cripitografarSenha, mudarData, validaEmail, validarCPF, validateDateTime, verificarId } from "../../src/utils/util"
 
 
 jest.mock('../../src/service/request-padrao-firebase');
@@ -140,5 +140,52 @@ describe('validateDateTime', () => {
 
     const result = validateDateTime(formattedFutureDate);
     expect(result).toBe(true);
+  });
+});
+
+describe('mudarData', () => {
+  test('deve converter a string de data e hora no formato correto', () => {
+      const input = '15/09/2024 14:30';
+      const result = mudarData(input);
+
+      // Cria a data esperada
+      const expectedDate = new Date(2024, 8, 15, 14, 30); // Meses são indexados de 0
+      const expectedDateString = expectedDate.toString();
+
+      expect(result).toBe(expectedDateString);
+  });
+
+  test('deve lidar com datas em anos diferentes', () => {
+      const input = '01/01/2000 00:00';
+      const result = mudarData(input);
+
+      const expectedDate = new Date(2000, 0, 1, 0, 0);
+      const expectedDateString = expectedDate.toString();
+
+      expect(result).toBe(expectedDateString);
+  });
+
+  test('deve lidar com datas em meses diferentes', () => {
+      const input = '01/12/2024 23:59';
+      const result = mudarData(input);
+
+      const expectedDate = new Date(2024, 11, 1, 23, 59); // Dezembro é o mês 11
+      const expectedDateString = expectedDate.toString();
+
+      expect(result).toBe(expectedDateString);
+  });
+
+  test('deve lidar com datas no início e fim do dia', () => {
+      const input1 = '01/01/2024 00:00';
+      const result1 = mudarData(input1);
+      const expectedDate1 = new Date(2024, 0, 1, 0, 0);
+      const expectedDateString1 = expectedDate1.toString();
+      expect(result1).toBe(expectedDateString1);
+
+      const input2 = '31/12/2024 23:59';
+      const result2 = mudarData(input2);
+      const expectedDate2 = new Date(2024, 11, 31, 23, 59);
+      const expectedDateString2 = expectedDate2.toString();
+      expect(result2).toBe(expectedDateString2);
   });
 });

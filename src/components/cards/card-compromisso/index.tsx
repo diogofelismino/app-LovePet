@@ -18,7 +18,7 @@ export default function CardCompromisso(props: CardCompromissoProps) {
 //  navigation.navigate("TelaResultadoNota", {dados: retorno, status: itemStatus, dadosNota: corpo}); 
     return (
         <View style={{ width:'50%' }}>
-            <CardImgTitulo titulo={props.dados.titulo} subTitulo={data[0]} fontTitulo={16} fontSubTitulo={18} nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={props.dados.id} />
+            <CardImgTitulo titulo={props.dados.titulo} subTitulo={data[0]} fontTitulo={14} fontSubTitulo={16} nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={props.dados.id} />
         </View>
     )
 }

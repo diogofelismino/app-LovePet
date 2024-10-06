@@ -106,3 +106,13 @@ export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) 
 
   return true;
 };
+
+
+export function mudarData(date: any) {
+  const [datePart, timePart] = date.split(' ');
+  const [day, month, year] = datePart.split("/");
+  const [hours, minutes] = timePart.split(':');
+  const dateObject = new Date(year, month - 1, day, hours, minutes);
+
+  return dateObject.toString();
+}
