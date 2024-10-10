@@ -1,7 +1,4 @@
 import React from 'react';
-import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
   Text,
@@ -9,10 +6,10 @@ import {
   SafeAreaView
 } from 'react-native';
 import App from './src';
-import { PaperProvider } from 'react-native-paper';
-import CustomTypeIcon from './src/components/custom-type-icon';
 import { Provider } from 'react-redux';
 import { store } from './src/store/storage';
+import { PaperProvider } from 'react-native-paper';
+import CustomTypeIcon from './src/components/custom-type-icon';
 
 export default function Index() {
 

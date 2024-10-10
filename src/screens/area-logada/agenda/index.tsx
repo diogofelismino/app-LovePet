@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ContainerAreaLogada from '../../../components/container-area-logada'
 import ButtonRound from '../../../components/button-round'
 import { COLOR_BUTTON } from '../../../styles/colors'
-import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { useLoading } from '../../../hooks/useLoading'
 import { pegarCompromissos } from '../../../service/agenda/agenda'
 import { useUsuario } from '../../../hooks/useUsuario'
@@ -19,6 +19,11 @@ export default function Agenda() {
     const { setLoading } = useLoading();
     const { usuario } = useUsuario();
     const { pet } = usePet();
+    const route: RouteProp<{
+        params: {
+            param: any
+        }
+    }, 'params'> = useRoute();
 
     const navigation = useNavigation<any>();
     const foco = useIsFocused();
@@ -26,37 +31,18 @@ export default function Agenda() {
 
     useEffect(() => {
         if (foco) {
-            buscarCompromisso();
+            console.log(route)
+            if(route.params)
+                navigation.navigate("Cadastrar Compromisso", {param: route.params.param});
+            else
+                buscarCompromisso();
+
         }
 
     }, [foco]);
 
     async function buscarCompromisso() {
         setLoading(true);
-
-
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "1");
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "2"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "3"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "4"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "5"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "6"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "7"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "8"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "9"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "10"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "11"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "12"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "13"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "14"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "15"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "16"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "17"); 
-        // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "18"); 
-       // await deletarDocumento(`Usuario/${usuario.usuario.id}/pets/${pet.id}/Compromisso`, "19"); 
-
-
-
 
         var dadosCompromisso = await pegarCompromissos(usuario.usuario.id, pet.id);
         if (dadosCompromisso && Array.isArray(dadosCompromisso)) {
@@ -67,7 +53,6 @@ export default function Agenda() {
 
         setLoading(false);
     }
-
 
     return (
         <ContainerAreaLogada nomeTela='Agenda' iconBack >

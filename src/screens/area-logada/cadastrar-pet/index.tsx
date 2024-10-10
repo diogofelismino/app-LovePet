@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { Platform, ScrollView, Text, View } from 'react-native'
 import ContainerAreaLogada from '../../../components/container-area-logada'
 import CardImagem from '../../../components/cards/card-imagem'
 import logoImg from '../../../assets/img/Logo.png'
@@ -72,22 +72,21 @@ export default function CadastrarPet() {
                         iconeRight={"paw"}
                     />
 
-                    <View style={styles.viewDropDonw}>
-                        <View style={{ width: '46%', alignItems: 'flex-start', zIndex: 1 }}>
+                    <View style={[styles.viewDropDonw]}>
+                        <View style={{ width: '46%', alignItems: 'flex-start'}}>
                             <DropDownPicker
                                 items={mesItem}
                                 value={mes}
                                 setValue={setMes}
                                 open={open}
-                                setOpen={(setOpen)}
+                                setOpen={setOpen}
                                 setItems={setMesItem}
                                 placeholder='mes'
                                 placeholderStyle={{ color: color.COLOR_FONT_INPUT }}
                                 style={{ borderColor: 'transparent', backgroundColor: color.BACKGROUND_INPUT, marginVertical: 10 }}
                                 dropDownContainerStyle={{ borderColor: color.COLOR_FONT_INPUT }}
                                 textStyle={{ color: color.COLOR_FONT_INPUT }}
-                                scrollViewProps={{ scrollEnabled: false }}
-                                zIndex={2000}
+                                zIndex={25000}
                             />
                         </View>
                         <View style={{ width: '54%', alignItems: 'flex-end' }}>

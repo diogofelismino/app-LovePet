@@ -11,6 +11,44 @@ describe('pegarCompromissos', () => {
         jest.clearAllMocks(); // Limpa os mocks após cada teste
     });
 
+    it('deve retornar os compromissos corretamente quando encontrados sem filtro', async () => {
+        // Mock da função lerDocumento retornando um array de compromissos
+        const mockCompromissos = [
+            { id: '1', descricao: 'Vacina', data: '2024-09-30' },
+            { id: '2', descricao: 'Consulta', data: '2024-10-01' }
+        ];
+        (lerDocumento as jest.Mock).mockResolvedValueOnce(mockCompromissos);
+
+        // Chama a função pegarCompromissos sem filtro
+        const compromissos = await pegarCompromissos('usuario123', 'pet456');
+
+        // Verifica se os compromissos retornados estão corretos
+        expect(compromissos).toEqual(mockCompromissos);
+        expect(lerDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet456/Compromisso');
+    });
+
+    it('deve retornar os compromissos corretamente quando encontrados com filtro', async () => {
+        // Mock da função lerDocumento retornando um array de compromissos filtrados
+        const mockCompromissosFiltrados = [
+            { id: '1', descricao: 'Vacina', data: '2024-09-30' }
+        ];
+        (lerDocumento as jest.Mock).mockResolvedValueOnce(mockCompromissosFiltrados);
+
+        // Chama a função pegarCompromissos com filtro
+        const campoFiltro = 'descricao';
+        const valorFiltro = 'Vacina';
+        const compromissos = await pegarCompromissos('usuario123', 'pet456', campoFiltro, valorFiltro);
+
+        // Verifica se os compromissos retornados estão corretos
+        expect(compromissos).toEqual(mockCompromissosFiltrados);
+        expect(lerDocumento).toHaveBeenCalledWith(
+            'Usuario/usuario123/pets/pet456/Compromisso',
+            null,
+            campoFiltro,
+            valorFiltro
+        );
+    });
+
     it('deve retornar os compromissos corretamente quando encontrados', async () => {
         // Mock da função lerDocumento retornando um array de compromissos
         const mockCompromissos = [

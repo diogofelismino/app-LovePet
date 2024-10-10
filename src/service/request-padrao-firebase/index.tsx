@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where, WhereFilterOp } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
 
@@ -31,7 +31,7 @@ export async function criarDocumento(path:any, dados:any, id:any = null) {
  * @param {string} [id] ID do documento, se necessário
  * @returns {object} Documento ou lista de documentos
  */
-export async function lerDocumento(path:any, id:any = null) {
+export async function lerDocumento(path:any, id:any = null, campoFiltro: any = null, valorFiltro: any = null, sinal:WhereFilterOp = "==") {
     try {
         if (id) {
             const docRef = doc(db, path, id);
@@ -42,7 +42,14 @@ export async function lerDocumento(path:any, id:any = null) {
                 return null;
             }
         } else {
-            const querySnapshot = await getDocs(collection(db, path));
+            let q;
+            if (campoFiltro && valorFiltro) {
+                // Adiciona a condição de filtro
+                q = query(collection(db, path), where(campoFiltro, sinal, valorFiltro));
+            } else {
+                q = collection(db, path);
+            }
+            const querySnapshot = await getDocs(q);
             const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             return documents;
         }

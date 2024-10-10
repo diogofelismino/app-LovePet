@@ -1,5 +1,5 @@
 import { criarDocumento, lerDocumento, updateDocumento, deletarDocumento } from '../../../src/service/request-padrao-firebase';
-import { getFirestore, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, collection, where, query } from 'firebase/firestore';
 
 
 jest.mock('firebase/firestore', () => {
@@ -16,6 +16,8 @@ jest.mock('firebase/firestore', () => {
         updateDoc: jest.fn(),
         deleteDoc: jest.fn(),
         collection: jest.fn(),
+        query: jest.fn(),
+        where: jest.fn(),
     };
 });
 
@@ -70,6 +72,37 @@ describe('CRUD Firebase Firestore', () => {
                 { id: 'doc1', nome: 'João', idade: 30 },
                 { id: 'doc2', nome: 'Maria', idade: 25 },
             ]);
+        });
+
+        it('deve aplicar um filtro ao ler documentos com where no Firestore', async () => {
+            const campoFiltro = 'idade';
+            const valorFiltro = 30;
+            const mockDocsSnap = [
+                { id: 'doc1', data: () => ({ nome: 'João', idade: 30 }) },
+            ];
+            (getDocs as jest.Mock).mockResolvedValueOnce({ docs: mockDocsSnap });
+    
+            const result = await lerDocumento(path, null, campoFiltro, valorFiltro);
+    
+            expect(getDocs).toHaveBeenCalledWith(query(
+                collection(getFirestore(), path),
+                where(campoFiltro, '==', valorFiltro)
+            ));
+            expect(result).toEqual([
+                { id: 'doc1', nome: 'João', idade: 30 },
+            ]);
+        });
+    
+        it('deve retornar null se o documento não existir', async () => {
+            const mockDocSnap = {
+                exists: () => false,
+            };
+            (getDoc as jest.Mock).mockResolvedValueOnce(mockDocSnap);
+    
+            const result = await lerDocumento(path, docId);
+    
+            expect(getDoc).toHaveBeenCalledWith(doc(getFirestore(), path, docId));
+            expect(result).toBeNull();
         });
     });
 

@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
     botao:{
         ...estilos.btnBasico,
         width:'90%',
-        marginTop:20
+        marginVertical:40
+
     }
 });
 
