@@ -55,11 +55,19 @@ interface ContainerAreaLogadaProps {
    */
     home?: boolean
 
+    /**
+   * Deve se passado quando deseja retornar para uma tela em especifico, deve ser ussado junto do iconBack.
+   * Valor padrão false
+   * @type {string}
+   * @default {""}
+   */
+    nomeTelaRetorno?: string
+
 }
 
 export default function ContainerAreaLogada(props: ContainerAreaLogadaProps) {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
 
     const style = styles(props.iconBack, props.home);
 
@@ -73,7 +81,14 @@ export default function ContainerAreaLogada(props: ContainerAreaLogadaProps) {
             <View style={style.viewHeader}>
                 {(props.iconBack && !props.home) &&
                     <View style={style.viewIcon}>
-                        <Icon name='left-4' size={20} color={"#000"} onPress={() => navigation.goBack()} />
+                        <Icon name='left-4' size={20} color={"#000"} onPress={() =>props.nomeTelaRetorno ? 
+                            //navigation.replace(props.nomeTelaRetorno) 
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: props.nomeTelaRetorno }],
+                              })
+                            
+                            : navigation.goBack()} />
                     </View>
                 }
 

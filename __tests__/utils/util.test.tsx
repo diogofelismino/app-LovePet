@@ -1,5 +1,5 @@
 import { lerDocumento } from "../../src/service/request-padrao-firebase";
-import { cripitografarSenha, mudarData, validaEmail, validarCPF, validateDateTime, verificarId } from "../../src/utils/util"
+import { converterDataParaString, cripitografarSenha, mudarData, validaEmail, validarCPF, validateDateTime, verificarId } from "../../src/utils/util"
 
 
 jest.mock('../../src/service/request-padrao-firebase');
@@ -187,5 +187,35 @@ describe('mudarData', () => {
       const expectedDate2 = new Date(2024, 11, 31, 23, 59);
       const expectedDateString2 = expectedDate2.toString();
       expect(result2).toBe(expectedDateString2);
+  });
+});
+
+describe('converterDataParaString', () => {
+  it('deve converter um objeto Date para a string no formato DD/MM/YYYY HH:mm', () => {
+    const data = new Date('2024-10-10T14:47:00'); // Data e hora a serem testadas
+    const resultado = converterDataParaString(data);
+    
+    expect(resultado).toBe('10/10/2024 14:47'); // Verifica se a conversão está correta
+  });
+
+  it('deve adicionar zeros à esquerda quando necessário', () => {
+    const data = new Date('2024-01-01T03:05:00'); // Data e hora a serem testadas
+    const resultado = converterDataParaString(data);
+    
+    expect(resultado).toBe('01/01/2024 03:05'); // Verifica se a conversão está correta
+  });
+
+  it('deve funcionar para a meia-noite', () => {
+    const data = new Date('2024-10-10T00:00:00'); // Data e hora a serem testadas
+    const resultado = converterDataParaString(data);
+    
+    expect(resultado).toBe('10/10/2024 00:00'); // Verifica se a conversão está correta
+  });
+
+  it('deve funcionar para o último minuto do dia', () => {
+    const data = new Date('2024-10-10T23:59:00'); // Data e hora a serem testadas
+    const resultado = converterDataParaString(data);
+    
+    expect(resultado).toBe('10/10/2024 23:59'); // Verifica se a conversão está correta
   });
 });

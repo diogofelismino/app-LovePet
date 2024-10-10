@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import CardImgTitulo from '../card-img-titulo'
 import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-dto'
+import { converterDataParaString } from '../../../utils/util'
 
 interface CardCompromissoProps {
     /**
@@ -14,11 +15,12 @@ interface CardCompromissoProps {
 
 
 export default function CardCompromisso(props: CardCompromissoProps) {
-    const data = props.dados.data_hora.toString().split(" ");
-//  navigation.navigate("TelaResultadoNota", {dados: retorno, status: itemStatus, dadosNota: corpo}); 
+
+    const data = converterDataParaString(new Date(props.dados.data_hora));
+
     return (
         <View style={{ width:'50%' }}>
-            <CardImgTitulo titulo={props.dados.titulo} subTitulo={data[0]} fontTitulo={14} fontSubTitulo={16} nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={props.dados.id} />
+            <CardImgTitulo titulo={props.dados.titulo} subTitulo={data.split(" ")[0]} fontTitulo={14} fontSubTitulo={16} nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={{idCard:props.dados.id}} />
         </View>
     )
 }

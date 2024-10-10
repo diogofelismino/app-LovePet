@@ -116,3 +116,16 @@ export function mudarData(date: any) {
 
   return dateObject.toString();
 }
+
+
+export function converterDataParaString(data: Date): string {
+
+  const dia = String(data.getDate()).padStart(2, '0'); // Obtém o dia e garante que tenha 2 dígitos
+  const mes = String(data.getMonth() + 1).padStart(2, '0'); // Obtém o mês (0-11, então adiciona 1) e garante 2 dígitos
+  const ano = data.getFullYear(); // Obtém o ano
+  const horas = String(data.getHours()).padStart(2, '0'); // Obtém as horas e garante 2 dígitos
+  const minutos = String(data.getMinutes()).padStart(2, '0'); // Obtém os minutos e garante 2 dígitos
+
+  // Retorna a string formatada
+  return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+}

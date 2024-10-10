@@ -110,7 +110,7 @@ export default function CadastrarPet() {
 
 
                     <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => cadastroPet()}>
-                        Registar
+                        Registrar
                     </Button>
 
                 </View>

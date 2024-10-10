@@ -21,7 +21,7 @@ export default function RouterAgenda() {
 
   return (
     <Stack.Navigator
-        initialRouteName={route.params.param ? 'Cadastrar Compromisso' :  'Agenda'}
+        initialRouteName={route?.params?.param != undefined && route?.params && route ? 'Cadastrar Compromisso' :  'Agenda'}
         screenOptions={{
             headerShown: false,
             animation: Platform.OS == 'ios' ? 'fade' : 'slide_from_right',
@@ -29,7 +29,7 @@ export default function RouterAgenda() {
         }}
     >
         <Stack.Screen name='Agenda' component={Agenda}  />     
-        <Stack.Screen name="Cadastrar Compromisso" component={CadastrarCompromisso} initialParams={{param:route.params.param}}/>
+        <Stack.Screen name="Cadastrar Compromisso" component={CadastrarCompromisso} initialParams={{param:route?.params?.param}}/>
    
     </Stack.Navigator>
   )

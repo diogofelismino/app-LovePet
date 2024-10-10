@@ -27,7 +27,7 @@ export function validarCampos(dados: CadastrarCompromissoDto) {
 }
 
 
-export async function AgendarNotificacao(data: any, titulo: string, idCompromisso:any = "default") {
+export async function AgendarNotificacao(data: any, titulo: string, idCompromisso: any = "default") {
 
     const date = new Date(data);
 
@@ -46,10 +46,12 @@ export async function AgendarNotificacao(data: any, titulo: string, idCompromiss
     }
 
     await notifee.createTriggerNotification({
+        id: idCompromisso,
         title: `${titulo}`,
-        body: `Horario agendado: ${date.getHours()}:${date.getMinutes() < 10 ?( "0"+date.getMinutes()) : date.getMinutes()}`,
+        body: `Horario agendado: ${date.getHours()}:${date.getMinutes() < 10 ? ("0" + date.getMinutes()) : date.getMinutes()}`,
         android: { channelId },
     }, trigger);
+
 }
 
 
@@ -62,6 +64,7 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
     data = mudarData(data);
 
     dados.id = await verificarId(`Usuario/${usuarioId}/pets/${petId}/Compromisso`);
+    dados.data_hora = new Date(data).toISOString();
 
     if (geraLembre)
         await AgendarNotificacao(data, dados.titulo, dados.id);
@@ -76,21 +79,22 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
 
 }
 
-export async function PegarCompromisso(usuarioId: any, petId: any, compomissoId:any) {
+export async function PegarCompromisso(usuarioId: any, petId: any, compomissoId: any) {
     var compromissos = await lerDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, compomissoId)
     return compromissos;
 }
 
 export async function EditarCompromisso(dados: CadastrarCompromissoDto, usuarioId: any, petId: any, navigation: any, geraLembre: boolean) {
-    try{
+    try {
 
         if (!validarCampos(dados)) {
             return;
         }
-    
+
         var data = dados.data_hora;
         data = mudarData(data);
-    
+        dados.data_hora = new Date(data).toISOString();
+
         await updateDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, dados.id, dados);
 
         if (geraLembre)
@@ -99,17 +103,17 @@ export async function EditarCompromisso(dados: CadastrarCompromissoDto, usuarioI
         Alert.alert("Aviso", "Compromisso atualizado com sucesso");
         navigation.navigate("Agenda");
     }
-    catch(error) {
+    catch (error) {
         Alert.alert("Aviso", "Ocorreu um erro ao tentar Editar o Compromisso, tente novemante mais tarde.");
     }
 }
 
-export async function ExcluirCompromisso(usuarioId: any, petId: any, compromissoId:any, navigation: any) {
+export async function ExcluirCompromisso(usuarioId: any, petId: any, compromissoId: any, navigation: any) {
     try {
 
         await deletarDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, compromissoId);
         await cancelarNotificacao(compromissoId);
-        
+
         Alert.alert("Aviso", "Compromisso foi excluido com sucesso");
         navigation.navigate("Agenda");
     } catch (error) {
@@ -117,10 +121,10 @@ export async function ExcluirCompromisso(usuarioId: any, petId: any, compromisso
     }
 }
 
-export async function cancelarNotificacao(idNotificacao:any) {
+export async function cancelarNotificacao(idNotificacao: any) {
     try {
-      await notifee.cancelNotification(idNotificacao);
+        await notifee.cancelNotification(idNotificacao);
     } catch (error) {
-      console.error('Erro ao cancelar a notificação:', error);
+        console.error('Erro ao cancelar a notificação:', error);
     }
-  }
+}

@@ -4,7 +4,7 @@ import ImagemCalendario from '../../../assets/img/calendario.png';
 import ImagemVacina from '../../../assets/img/vacina.png';
 import styles from './styles';
 import * as pallete from '../../../styles/colors';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 
 interface CardImgTituloProps {
 
@@ -74,6 +74,13 @@ interface CardImgTituloProps {
     */
     fontSubTitulo?: number
 
+    /**
+    * Deve Passar o nome da rota para qual deseja ir, deve se usardo junto do nomeTelaNavegacao
+    * @type {string}
+    * @default ""
+    */
+    navegacaoDireta?:string
+
 
 }
 
@@ -101,6 +108,12 @@ export default function CardImgTitulo(props: CardImgTituloProps) {
 
             if (props.agedarRegistrar)
                 navigation.navigate(props.nomeTelaNavegacao);
+            else if(props.navegacaoDireta){
+                navigation.navigate(props.navegacaoDireta, {
+                    screen: props.nomeTelaNavegacao,
+                    params: {param: props.paramNavigate},
+                });
+            }
             else
                 navigation.navigate(props.nomeTelaNavegacao, {param: props.paramNavigate});// vai mudar provavel passarei dado por rota;
         }}>

@@ -10,24 +10,29 @@ import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-d
 import { useLoading } from '../../../hooks/useLoading';
 import { pegarCompromissos } from '../../../service/agenda/agenda';
 import { useUsuario } from '../../../hooks/useUsuario';
+import { useIsFocused } from '@react-navigation/native';
+import { converterDataParaString } from '../../../utils/util';
 
 export default function Home() {
 
   const { usuario }  = useUsuario();
   const { pet } = usePet();
   const { setLoading } = useLoading();
+  const foco = useIsFocused();
 
   const [compromisso, setCompromisso] = useState<CompromissoDto[]>([]);
 
 
   useEffect(() => {
-    buscarCompromisso();
-  }, []);
+    if(foco)
+      buscarCompromisso();
+  }, [foco]);
 
   async function buscarCompromisso() {
     setLoading(true);
 
-    var dadosCompromisso = await pegarCompromissos(usuario.usuario.id, pet.id, 'data_hora', new Date().toISOString(), "<=");
+
+    var dadosCompromisso = await pegarCompromissos(usuario.usuario.id, pet.id, 'data_hora', new Date().toISOString(), ">=");
 
     if (dadosCompromisso && Array.isArray(dadosCompromisso)) {
         setCompromisso(dadosCompromisso as CompromissoDto[]);
@@ -51,7 +56,7 @@ export default function Home() {
             <FlatList
               data={compromisso}
               renderItem={({ item }) => (
-                <CardImgTitulo titulo={item.titulo} subTitulo={item.data_hora.toString().split(" ")[0]} nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={item.id} />
+                <CardImgTitulo titulo={item.titulo} subTitulo={converterDataParaString(new Date(item.data_hora)).toString().split(" ")[0]} navegacaoDireta='Agenda' nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={{idCard:item.id, retorno:true}} />
               )}
               keyExtractor={item => item.id}
             />

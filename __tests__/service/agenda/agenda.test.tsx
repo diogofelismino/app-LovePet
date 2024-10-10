@@ -45,7 +45,8 @@ describe('pegarCompromissos', () => {
             'Usuario/usuario123/pets/pet456/Compromisso',
             null,
             campoFiltro,
-            valorFiltro
+            valorFiltro,
+            "=="
         );
     });
 

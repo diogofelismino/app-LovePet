@@ -31,9 +31,8 @@ export default function Agenda() {
 
     useEffect(() => {
         if (foco) {
-            console.log(route)
-            if(route.params)
-                navigation.navigate("Cadastrar Compromisso", {param: route.params.param});
+            if(route?.params)
+                navigation.navigate("Cadastrar Compromisso", {param: route?.params?.param});
             else
                 buscarCompromisso();
 
@@ -45,7 +44,9 @@ export default function Agenda() {
         setLoading(true);
 
         var dadosCompromisso = await pegarCompromissos(usuario.usuario.id, pet.id);
+        
         if (dadosCompromisso && Array.isArray(dadosCompromisso)) {
+
             setCompromisso(dadosCompromisso as CompromissoDto[]);
         } else {
             setCompromisso([]);

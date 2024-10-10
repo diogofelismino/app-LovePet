@@ -14,7 +14,7 @@ import { useLoading } from '../../../hooks/useLoading'
 import { useUsuario } from '../../../hooks/useUsuario'
 import { usePet } from '../../../hooks/usePet'
 import { EditarCompromisso, ExcluirCompromisso, PegarCompromisso, RegistrarCompromisso } from '../../../service/cadastrar-compromisso/request-cadastrar-compromisso'
-import { mudarData, validateDateTime } from '../../../utils/util'
+import { converterDataParaString, mudarData, validateDateTime } from '../../../utils/util'
 import { aplicarMascaraDateTime } from '../../../utils/mascara'
 import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-dto'
 
@@ -23,7 +23,10 @@ export default function CadastrarCompromisso() {
 
     const route: RouteProp<{
         params: {
-            param: any
+            param: {
+                idCard:any
+                retorno:boolean
+            }
         }
     }, 'params'> = useRoute();
 
@@ -38,7 +41,7 @@ export default function CadastrarCompromisso() {
 
 
     useEffect(() => {
-        if(route.params)
+        if(route?.params?.param?.idCard)
             RecuperarCompromisso();
     }, []);
 
@@ -69,13 +72,12 @@ export default function CadastrarCompromisso() {
 
     async function RecuperarCompromisso() {
         setLoading(true);
-        const dado = await PegarCompromisso(usuario.usuario.id, pet.id, route.params.param);
+        const dado = await PegarCompromisso(usuario.usuario.id, pet.id, route.params.param.idCard);
         const compromisso = dado as CompromissoDto;      
-        setForm({...form, titulo: compromisso.titulo, data_hora: compromisso.data_hora, descricao: compromisso.descricao, id: compromisso.id});
+        setForm({...form, titulo: compromisso.titulo, data_hora: converterDataParaString(new Date(compromisso.data_hora)), descricao: compromisso.descricao, id: compromisso.id});
 
-        var data = new Date(mudarData(compromisso.data_hora))
 
-        if(data > new Date())
+        if(new Date(compromisso.data_hora) > new Date())
             setNotficar(true);
 
         setPrimeira(true);
@@ -86,7 +88,11 @@ export default function CadastrarCompromisso() {
     }
 
     return (
-        <ContainerAreaLogada nomeTela={route.params?.param == undefined || route.params?.param == "" ? 'Agenda' : "Alterar dados da agenda"} iconBack >
+        <ContainerAreaLogada 
+            nomeTela={route.params?.param?.idCard == undefined || route.params?.param?.idCard == "" ? 'Agenda' : "Alterar dados da agenda"}
+            iconBack 
+            nomeTelaRetorno={route?.params?.param?.retorno ? "Agenda"  : ""}
+            >
             <ScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
                 <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
                 <View style={styles.viewCentro}>
@@ -110,7 +116,7 @@ export default function CadastrarCompromisso() {
                         <Text style={{ marginRight: 10, fontSize: 15, color: '#000' }}>Receber lembretes automáticos</Text>
                     </View>
 
-                    {route.params?.param == undefined || route.params?.param == "" ?
+                    {route.params?.param == undefined || route.params?.param?.idCard == "" ?
 
                         <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Cadastar()}>
                             Registar

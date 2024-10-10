@@ -78,8 +78,8 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
     return (
         <TextInput
             label={Label}
-            value={mascara == null ? value : mascara(value)}
-            onChangeText={text => setValue(text)}
+            value={mascara == null ? value : value}
+            onChangeText={text => setValue(mascara == null ? text : mascara(text))}
             mode='outlined'
             textColor={COLOR_FONT_INPUT}
             style={styles.input}
@@ -93,6 +93,7 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
             right={iconeRight != "" ? <TextInput.Icon icon={() => (<Icon name={iconeRight} color={COLOR_FONT_INPUT} size={18}/>)}  disabled/> : null}
             maxLength={numeroDeDigito}
             keyboardType={tipoTeclado}
+          
         />
     )
 }
