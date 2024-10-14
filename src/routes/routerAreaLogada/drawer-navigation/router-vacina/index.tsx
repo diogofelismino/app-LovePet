@@ -6,6 +6,7 @@ import { Platform } from 'react-native';
 
 import { RouteProp, useRoute } from '@react-navigation/native';
 import CarteiraDeVacinacao from '../../../../screens/area-logada/carteira-de-vacinacao';
+import CadastrarVacinas from '../../../../screens/area-logada/carteira-de-vacinacao/cadastrar-vacina';
 
 // import RouterHomeDrawerNavigation from './drawer-navigation';
 
@@ -29,6 +30,7 @@ export default function RouterVacina() {
         }}
     >
         <Stack.Screen name='Vacinas' component={CarteiraDeVacinacao}  />     
+        <Stack.Screen name='CadastrarVacinas' component={CadastrarVacinas}/>
      
    
     </Stack.Navigator>

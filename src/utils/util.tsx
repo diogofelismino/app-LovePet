@@ -50,7 +50,7 @@ export async function verificarId(caminho: any) {
     return '1'
 }
 
-export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) {
+export function validateDateTime(dateTime: any, editarPrimeira:boolean = false, validateOnlyRealDate:boolean = false) {
 
   if(editarPrimeira)
     return true;
@@ -61,7 +61,12 @@ export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) 
 
   // Regex para validar o formato DD/MM/YYYY HH:mm
   const regex = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/;
-  const match = dateTime.match(regex);
+  var match = dateTime.match(regex);
+  if(validateOnlyRealDate){
+    const regex2 = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if(!match)
+      match = dateTime.match(regex2);
+  }
 
   // Se match for null, a data está em formato inválido
   if (!match) {
@@ -75,8 +80,13 @@ export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) 
   const dayNumber = parseInt(day, 10);
   const monthNumber = parseInt(month, 10);
   const yearNumber = parseInt(year, 10);
-  const hoursNumber = parseInt(hours, 10);
-  const minutesNumber = parseInt(minutes, 10);
+  var hoursNumber = parseInt(hours, 10);
+  var minutesNumber = parseInt(minutes, 10);
+
+  if(validateOnlyRealDate && isNaN(hoursNumber) &&  isNaN(minutesNumber) ){
+    hoursNumber = 0;
+    minutesNumber = 0;
+  }
 
   if (
     isNaN(dayNumber) || isNaN(monthNumber) || isNaN(yearNumber) ||
@@ -94,12 +104,15 @@ export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) 
 
   // Verificar se a data é inválida ou se é no passado
   if (
-    dateObject.getFullYear() !== yearNumber ||
+
+    !validateOnlyRealDate &&
+
+ (   dateObject.getFullYear() !== yearNumber ||
     dateObject.getMonth() !== monthNumber - 1 ||
     dateObject.getDate() !== dayNumber ||
     dateObject.getHours() !== hoursNumber ||
     dateObject.getMinutes() !== minutesNumber ||
-    dateObject < new Date()
+    dateObject < new Date())
   ) {
     return false;
   }
@@ -108,9 +121,13 @@ export function validateDateTime(dateTime: any, editarPrimeira:boolean = false) 
 };
 
 
-export function mudarData(date: any) {
+export function mudarData(date: any, horas:boolean = true) {
   const [datePart, timePart] = date.split(' ');
   const [day, month, year] = datePart.split("/");
+  if(!horas){
+    const dateObject = new Date(year, month - 1, day);
+    return dateObject.toString();
+  }
   const [hours, minutes] = timePart.split(':');
   const dateObject = new Date(year, month - 1, day, hours, minutes);
 

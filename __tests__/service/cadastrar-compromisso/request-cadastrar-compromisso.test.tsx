@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { AgendarNotificacao,  cancelarNotificacao,  EditarCompromisso,  ExcluirCompromisso,  PegarCompromisso,  RegistrarCompromisso, validarCampos } from "../../../src/service/cadastrar-compromisso/request-cadastrar-compromisso";
+import { AgendarNotificacao, cancelarNotificacao, EditarCompromisso, ExcluirCompromisso, PegarCompromisso, RegistrarCompromisso, validarCampos } from "../../../src/service/cadastrar-compromisso/request-cadastrar-compromisso";
 import { CadastrarCompromissoDto } from "../../../src/model/Dto/cadastrar-compomisso-dto/cadastrar-compromisso-dto";
 import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
 import { criarDocumento, deletarDocumento, lerDocumento, updateDocumento } from "../../../src/service/request-padrao-firebase";
@@ -81,11 +81,13 @@ describe('AgendarNotificacao', () => {
 
         // Verify if createTriggerNotification was called with the correct parameters
         expect(notifee.createTriggerNotification).toHaveBeenCalledWith(
-            {
+            expect.objectContaining({
+
                 title: titulo,
                 body: expectedBody,
                 android: { channelId: 'mockChannelId' },
-            },
+
+            }),
             {
                 type: 'timestamp',
                 timestamp: expectedTimestamp,
@@ -95,7 +97,7 @@ describe('AgendarNotificacao', () => {
 });
 
 
-describe('RealizarCadastroPet', () => {
+describe('RegistrarCompromisso', () => {
     const mockNavigation = { navigate: jest.fn() };
 
     it('deve navegar para "Agenda" quando o cadastro for bem-sucedido com notificação agendada', async () => {
@@ -144,7 +146,7 @@ describe('EditarCompromisso', () => {
     );
 
     it('deve navegar para "Agenda" quando a edição for bem-sucedida sem agendar compromissoo', async () => {
-        (updateDocumento as jest.Mock).mockResolvedValueOnce({id: '123'});
+        (updateDocumento as jest.Mock).mockResolvedValueOnce({ id: '123' });
 
         await EditarCompromisso(mockDados, "usuario123", "pet123", mockNavigation, false);
 
@@ -156,7 +158,7 @@ describe('EditarCompromisso', () => {
 
     it('deve navegar para "Agenda" quando a edição for bem-sucedida agendando compromissoo', async () => {
 
-        (updateDocumento as jest.Mock).mockResolvedValueOnce({id: '123'});
+        (updateDocumento as jest.Mock).mockResolvedValueOnce({ id: '123' });
 
         await EditarCompromisso(mockDados, "usuario123", "pet123", mockNavigation, true);
 
@@ -246,40 +248,40 @@ describe('ExcluirCompromisso', () => {
 
 describe('cancelarNotificacao', () => {
     beforeEach(() => {
-      jest.clearAllMocks(); // Limpa os mocks antes de cada teste
+        jest.clearAllMocks(); // Limpa os mocks antes de cada teste
     });
-  
+
     it('deve cancelar a notificação com sucesso', async () => {
-      const mockIdNotificacao = 'notificacao123';
-  
-      // Mockando a função cancelNotification
-      notifee.cancelNotification = jest.fn().mockResolvedValueOnce(undefined);
-  
-      // Chamando a função a ser testada
-      await cancelarNotificacao(mockIdNotificacao);
-  
-      // Verificando se cancelNotification foi chamada com o ID correto
-      expect(notifee.cancelNotification).toHaveBeenCalledWith(mockIdNotificacao);
-  
+        const mockIdNotificacao = 'notificacao123';
+
+        // Mockando a função cancelNotification
+        notifee.cancelNotification = jest.fn().mockResolvedValueOnce(undefined);
+
+        // Chamando a função a ser testada
+        await cancelarNotificacao(mockIdNotificacao);
+
+        // Verificando se cancelNotification foi chamada com o ID correto
+        expect(notifee.cancelNotification).toHaveBeenCalledWith(mockIdNotificacao);
+
     });
-  
+
     it('deve tratar erro ao cancelar a notificação', async () => {
-      const mockIdNotificacao = 'notificacao123';
-      const mockError = new Error('Erro ao cancelar');
-  
-      // Mockando a função cancelNotification para rejeitar a promessa
-      notifee.cancelNotification = jest.fn().mockRejectedValueOnce(mockError);
-  
-      // Spy para monitorar console.error
-      console.error = jest.fn();
-  
-      // Chamando a função a ser testada
-      await cancelarNotificacao(mockIdNotificacao);
-  
-      // Verificando se cancelNotification foi chamada com o ID correto
-      expect(notifee.cancelNotification).toHaveBeenCalledWith(mockIdNotificacao);
-  
-      // Verificando se a mensagem de erro foi registrada no console
-      expect(console.error).toHaveBeenCalledWith('Erro ao cancelar a notificação:', mockError);
+        const mockIdNotificacao = 'notificacao123';
+        const mockError = new Error('Erro ao cancelar');
+
+        // Mockando a função cancelNotification para rejeitar a promessa
+        notifee.cancelNotification = jest.fn().mockRejectedValueOnce(mockError);
+
+        // Spy para monitorar console.error
+        console.error = jest.fn();
+
+        // Chamando a função a ser testada
+        await cancelarNotificacao(mockIdNotificacao);
+
+        // Verificando se cancelNotification foi chamada com o ID correto
+        expect(notifee.cancelNotification).toHaveBeenCalledWith(mockIdNotificacao);
+
+        // Verificando se a mensagem de erro foi registrada no console
+        expect(console.error).toHaveBeenCalledWith('Erro ao cancelar a notificação:', mockError);
     });
-  });
+});

@@ -56,7 +56,14 @@ export default function Home() {
             <FlatList
               data={compromisso}
               renderItem={({ item }) => (
-                <CardImgTitulo titulo={item.titulo} subTitulo={converterDataParaString(new Date(item.data_hora)).toString().split(" ")[0]} navegacaoDireta='Agenda' nomeTelaNavegacao='Cadastrar Compromisso' paramNavigate={{idCard:item.id, retorno:true}} />
+                <CardImgTitulo 
+                  titulo={item.titulo} 
+                  subTitulo={converterDataParaString(new Date(item.data_hora)).toString().split(" ")[0]} 
+                  navegacaoDireta='Agenda' 
+                  nomeTelaNavegacao='Cadastrar Compromisso' 
+                  paramNavigate={{idCard:item.id, retorno:true}} 
+                  ehVacina={item.titulo.includes("Vacinação")}
+                  />
               )}
               keyExtractor={item => item.id}
             />

@@ -55,10 +55,11 @@ export async function AgendarNotificacao(data: any, titulo: string, idCompromiss
 }
 
 
-export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuarioId: any, petId: any, navigation: any, geraLembre: boolean) {
+export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuarioId: any, petId: any, navigation: any, geraLembre: boolean, vacina: boolean = false) {
     if (!validarCampos(dados)) {
         return;
     }
+    console.log(dados)
 
     var data = dados.data_hora;
     data = mudarData(data);
@@ -71,8 +72,11 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
 
     const elemento = await criarDocumento(`Usuario/${usuarioId}/pets/${petId}/Compromisso`, dados, dados.id);
 
-    if (elemento) {
+    if (elemento && !vacina) {
         navigation.navigate("Agenda");
+    }
+    else if(elemento && vacina){
+        return true;
     }
     else
         Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar o Compromisso, tente novemante mais tarde.")
