@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { pegarVacinas, RegistrarVacina, validarCampos } from "../../../src/service/carteira-de-vacina/carteira-de-vacina";
+import { pegarVacinas, PegarVacinasId, RegistrarVacina, validarCampos } from "../../../src/service/carteira-de-vacina/carteira-de-vacina";
 import { criarDocumento, lerDocumento } from "../../../src/service/request-padrao-firebase";
 import { mudarData, validateDateTime, verificarId } from "../../../src/utils/util";
 import { VacinaDto } from "../../../src/model/Dto/vacina-dto/vacina-dto";
@@ -158,5 +158,42 @@ describe('RegistrarVacina', () => {
         await RegistrarVacina(mockDados, 'usuario123', 'pet123', mockNavigation);
 
         expect(Alert.alert).toHaveBeenCalledWith("Erro", "Data de aplicação inválida."); // Verifica o alerta
+    });
+});
+
+describe('PegarVacinasId', () => {
+    afterEach(() => {
+        jest.clearAllMocks(); // Limpa os mocks após cada teste
+    });
+
+    it('deve retornar a vacina correta', async () => {
+        const mockVacina = {
+            id: 'vacina123',
+            nome: 'Vacina Anti-rábica',
+            data: '10/10/2023',
+        };
+
+        // Mock da função lerDocumento para retornar a vacina simulada
+        (lerDocumento as jest.Mock).mockResolvedValueOnce(mockVacina);
+
+        const resultado = await PegarVacinasId('usuario123', 'pet123', 'vacina123');
+
+        // Verifica se o documento retornado é o correto
+        expect(resultado).toEqual(mockVacina);
+
+        // Verifica se a função lerDocumento foi chamada com os parâmetros corretos
+        expect(lerDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet123/Vacina', 'vacina123');
+    });
+
+    it('deve lidar corretamente com um erro ao buscar a vacina', async () => {
+        // Mock da função lerDocumento para simular uma falha
+        (lerDocumento as jest.Mock).mockRejectedValueOnce(new Error('Erro ao buscar vacina'));
+
+        await expect(PegarVacinasId('usuario123', 'pet123', 'vacina123'))
+            .rejects
+            .toThrow('Erro ao buscar vacina');
+
+        // Verifica se a função lerDocumento foi chamada com os parâmetros corretos
+        expect(lerDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet123/Vacina', 'vacina123');
     });
 });

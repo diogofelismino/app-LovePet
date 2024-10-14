@@ -21,7 +21,7 @@ export default function CardVacina(props: CardVacinaProps) {
 
     return (
         <View style={{ width:'50%' }}>
-            <CardImgTitulo titulo={props.dados.nome_vacina} subTitulo={data.split(" ")[0]} fontTitulo={14} fontSubTitulo={16} nomeTelaNavegacao='' paramNavigate={{idCard:props.dados.id}} ehVacina />
+            <CardImgTitulo titulo={props.dados.nome_vacina} subTitulo={data.split(" ")[0]} fontTitulo={14} fontSubTitulo={16} nomeTelaNavegacao='CadastrarVacinas' paramNavigate={{idCard:props.dados.id}} ehVacina />
         </View>
     )
 }

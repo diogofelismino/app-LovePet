@@ -6,7 +6,7 @@ import TextInputPerso from '../../../../components/text-input'
 import * as color from '../../../../styles/colors'
 import logoImg from "../../../../assets/img/vacina.png"
 import styles from './styles'
-import { validateDateTime } from '../../../../utils/util'
+import { converterDataParaString, validateDateTime } from '../../../../utils/util'
 import { aplicarMascaraDateTime } from '../../../../utils/mascara'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { useLoading } from '../../../../hooks/useLoading'
@@ -14,7 +14,7 @@ import { useUsuario } from '../../../../hooks/useUsuario'
 import { usePet } from '../../../../hooks/usePet'
 import { Button } from 'react-native-paper'
 import { VacinaDto } from '../../../../model/Dto/vacina-dto/vacina-dto'
-import { RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
+import { PegarVacinasId, RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
 
 export default function CadastrarVacinas() {
     const route: RouteProp<{
@@ -36,8 +36,8 @@ export default function CadastrarVacinas() {
     const [primeira, setPrimeira] = useState<boolean>(false);
 
     useEffect(() => {
-        //if(route?.params?.param?.idCard)
-        //RecuperarCompromisso();
+        if (route?.params?.param?.idCard)
+            RecuperarVacinas();
     }, []);
 
 
@@ -65,17 +65,36 @@ export default function CadastrarVacinas() {
         setLoading(false);
     }
 
+    async function RecuperarVacinas() {
+        setLoading(true);
+        const dado = await PegarVacinasId(usuario.usuario.id, pet.id, route.params.param.idCard);
+        const vacina = dado as VacinaDto;
+        setForm({
+            ...form,
+            nome_vacina: vacina.nome_vacina,
+            data_aplicacao: converterDataParaString(new Date(vacina.data_aplicacao)),
+            proxima_dose: vacina.proxima_dose == null || vacina.proxima_dose == "" ? null : converterDataParaString(new Date(vacina.proxima_dose)),
+            id: vacina.id
+        });
+
+        setPrimeira(true);
+        setLoading(false);
+    }
+
     return (
         <ContainerAreaLogada
-            nomeTela={"Cadastrar vacinas"}
+            nomeTela={route.params?.param?.idCard == undefined || route.params?.param?.idCard == "" ? "Cadastrar vacinas" : "Vacinas"}
             iconBack
         >
             <ScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
                 <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
                 <View style={styles.viewCentro}>
-                    <View style={{ width: '90%' }}>
-                        <Text style={styles.titulo}>Data de aplicação da vacinas anteriores</Text>
-                    </View>
+                    {route.params?.param?.idCard == undefined || route.params?.param?.idCard == "" &&
+
+                        <View style={{ width: '90%' }}>
+                            <Text style={styles.titulo}>Data de aplicação da vacinas anteriores</Text>
+                        </View>
+                    }
 
 
                     <TextInputPerso
@@ -95,7 +114,7 @@ export default function CadastrarVacinas() {
                         iconeRight={"eyedropper"}
                     />
 
-                    <View style={{ width: '90%', marginTop:15 }}>
+                    <View style={{ width: '90%', marginTop: 15 }}>
                         <Text style={styles.titulo}>Data da próxima aplicação da vacinas</Text>
                     </View>
 
@@ -109,24 +128,24 @@ export default function CadastrarVacinas() {
                         numeroDeDigito={16}
                     />
 
-                    <View style={{width:'100%', alignItems:'center', marginTop:20}}>
+                    <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
 
-                    {route.params?.param == undefined || route.params?.param?.idCard == "" ?
+                        {route.params?.param == undefined || route.params?.param?.idCard == "" ?
 
-                        <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Cadastar()}>
-                            Salvar
-                        </Button>
-                        :
-                        <>
-                            <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Excluir()}>
-                                Excluir eventos
-                            </Button>
-
-                            <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Editar()}>
+                            <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Cadastar()}>
                                 Salvar
                             </Button>
-                        </>
-                    }
+                            :
+                            <>
+                                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Excluir()}>
+                                    Excluir eventos
+                                </Button>
+
+                                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Editar()}>
+                                    Salvar
+                                </Button>
+                            </>
+                        }
                     </View>
 
                 </View>

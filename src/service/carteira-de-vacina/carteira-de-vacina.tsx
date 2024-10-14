@@ -81,4 +81,9 @@ export async function pegarVacinas(usuarioId:any, petId:any) {
 
     var vacina = await lerDocumento(`Usuario/${usuarioId}/pets/${petId}/Vacina`);
     return vacina;
-  } 
+} 
+
+export async function PegarVacinasId(usuarioId: any, petId: any, vacinaId: any) {
+    var vacina = await lerDocumento(`Usuario/${usuarioId}/pets/${petId}/Vacina`, vacinaId)
+    return vacina;
+}

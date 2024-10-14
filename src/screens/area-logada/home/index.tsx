@@ -48,7 +48,7 @@ export default function Home() {
       <View style={{ flex: 1, }}>
         {compromisso.length == 0 ?
           <>
-            <CardImgTitulo titulo='Carteira de Vacinação' flex ehVacina agedarRegistrar nomeTelaNavegacao='Vacina' />
+            <CardImgTitulo titulo='Carteira de Vacinação' flex ehVacina agedarRegistrar nomeTelaNavegacao='Vacinas' />
             <CardImgTitulo titulo='Agendar Compromisso' flex agedarRegistrar nomeTelaNavegacao='Agenda' />
           </>
           :
