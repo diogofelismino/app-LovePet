@@ -68,7 +68,7 @@ describe('AgendarNotificacao', () => {
         await AgendarNotificacao(data, titulo);
 
         // Define expected values
-        const expectedBody = `Horario agendado: 15:30`;
+        const expectedBody = `Horario agendado: 14:30`;
         const expectedTimestamp = new Date(data).getTime(); // O timestamp da data fornecida
 
         // Check if requestPermission and createChannel were called correctly

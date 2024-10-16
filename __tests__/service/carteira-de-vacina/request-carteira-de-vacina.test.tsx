@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
-import { pegarVacinas, PegarVacinasId, RegistrarVacina, validarCampos } from "../../../src/service/carteira-de-vacina/carteira-de-vacina";
-import { criarDocumento, lerDocumento } from "../../../src/service/request-padrao-firebase";
+import { ExcluirVacina, pegarVacinas, PegarVacinasId, RegistrarVacina, validarCampos } from "../../../src/service/carteira-de-vacina/carteira-de-vacina";
+import { criarDocumento, deletarDocumento, lerDocumento } from "../../../src/service/request-padrao-firebase";
 import { mudarData, validateDateTime, verificarId } from "../../../src/utils/util";
 import { VacinaDto } from "../../../src/model/Dto/vacina-dto/vacina-dto";
 import { RegistrarCompromisso } from "../../../src/service/cadastrar-compromisso/request-cadastrar-compromisso";
@@ -197,3 +197,43 @@ describe('PegarVacinasId', () => {
         expect(lerDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet123/Vacina', 'vacina123');
     });
 });
+
+describe('ExcluirVacina', () => {
+    const mockNavigation = { navigate: jest.fn() };
+  
+    beforeEach(() => {
+      jest.clearAllMocks(); // Limpa os mocks antes de cada teste
+    });
+  
+    it('deve excluir a vacina e navegar para "Vacinas" quando a exclusão for bem-sucedida', async () => {
+      // Mock das funções para que resolvam com sucesso
+      (deletarDocumento as jest.Mock).mockResolvedValueOnce({});
+  
+      await ExcluirVacina('usuario123', 'pet123', 'vacina123', mockNavigation);
+  
+      // Verifica se o documento foi excluído
+      expect(deletarDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet123/Vacina', 'vacina123');
+  
+      // Verifica se a mensagem de sucesso foi exibida
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Vacina foi excluido com sucesso');
+  
+      // Verifica se a navegação foi chamada corretamente
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Vacinas');
+    });
+  
+    it('deve exibir alerta de erro se a exclusão falhar', async () => {
+      // Mock para simular uma falha na exclusão do documento
+      (deletarDocumento as jest.Mock).mockRejectedValueOnce(new Error('Erro ao excluir documento'));
+  
+      await ExcluirVacina('usuario123', 'pet123', 'vacina123', mockNavigation);
+  
+      // Verifica se a função deletarDocumento foi chamada com os parâmetros corretos
+      expect(deletarDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet123/Vacina', 'vacina123');
+  
+      // Verifica se a mensagem de erro foi exibida
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Ocorreu um erro ao tentar Excluir a Vacina, tente novemante mais tarde.');
+  
+      // Verifica que a navegação NÃO foi chamada
+      expect(mockNavigation.navigate).not.toHaveBeenCalled();
+    });
+  });

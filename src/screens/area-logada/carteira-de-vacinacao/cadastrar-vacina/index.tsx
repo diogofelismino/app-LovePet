@@ -14,7 +14,7 @@ import { useUsuario } from '../../../../hooks/useUsuario'
 import { usePet } from '../../../../hooks/usePet'
 import { Button } from 'react-native-paper'
 import { VacinaDto } from '../../../../model/Dto/vacina-dto/vacina-dto'
-import { PegarVacinasId, RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
+import { ExcluirVacina, PegarVacinasId, RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
 
 export default function CadastrarVacinas() {
     const route: RouteProp<{
@@ -52,7 +52,7 @@ export default function CadastrarVacinas() {
     async function Excluir() {
         setLoading(true);
 
-        //await ExcluirCompromisso(usuario.usuario.id, pet.id, form.id, navigation);
+        await ExcluirVacina(usuario.usuario.id, pet.id, form.id, navigation);
 
         setLoading(false);
     }
@@ -73,7 +73,7 @@ export default function CadastrarVacinas() {
             ...form,
             nome_vacina: vacina.nome_vacina,
             data_aplicacao: converterDataParaString(new Date(vacina.data_aplicacao)),
-            proxima_dose: vacina.proxima_dose == null || vacina.proxima_dose == "" ? null : converterDataParaString(new Date(vacina.proxima_dose)),
+            proxima_dose: vacina.proxima_dose == null || vacina.proxima_dose == "" ? "" : converterDataParaString(new Date(vacina.proxima_dose)),
             id: vacina.id
         });
 
@@ -138,7 +138,7 @@ export default function CadastrarVacinas() {
                             :
                             <>
                                 <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Excluir()}>
-                                    Excluir eventos
+                                    Excluir vacina
                                 </Button>
 
                                 <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => Editar()}>
