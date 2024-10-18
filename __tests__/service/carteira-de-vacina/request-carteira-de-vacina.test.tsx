@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
-import { ExcluirVacina, pegarVacinas, PegarVacinasId, RegistrarVacina, validarCampos } from "../../../src/service/carteira-de-vacina/carteira-de-vacina";
-import { criarDocumento, deletarDocumento, lerDocumento } from "../../../src/service/request-padrao-firebase";
+import { EditarVacina, ExcluirVacina, pegarVacinas, PegarVacinasId, RegistrarVacina, validarCampos } from "../../../src/service/carteira-de-vacina/carteira-de-vacina";
+import { criarDocumento, deletarDocumento, lerDocumento, updateDocumento } from "../../../src/service/request-padrao-firebase";
 import { mudarData, validateDateTime, verificarId } from "../../../src/utils/util";
 import { VacinaDto } from "../../../src/model/Dto/vacina-dto/vacina-dto";
 import { RegistrarCompromisso } from "../../../src/service/cadastrar-compromisso/request-cadastrar-compromisso";
@@ -215,7 +215,7 @@ describe('ExcluirVacina', () => {
       expect(deletarDocumento).toHaveBeenCalledWith('Usuario/usuario123/pets/pet123/Vacina', 'vacina123');
   
       // Verifica se a mensagem de sucesso foi exibida
-      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Vacina foi excluido com sucesso');
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Vacina excluída com sucesso. ');
   
       // Verifica se a navegação foi chamada corretamente
       expect(mockNavigation.navigate).toHaveBeenCalledWith('Vacinas');
@@ -237,3 +237,41 @@ describe('ExcluirVacina', () => {
       expect(mockNavigation.navigate).not.toHaveBeenCalled();
     });
   });
+
+  describe('EditarVacina', () => {
+    const mockNavigation = { navigate: jest.fn() };
+    const mockDados = {
+        id: 'vacina123',
+        nome_vacina: 'Vacina XYZ',
+        data_aplicacao: '01/01/2024',
+        proxima_dose: '01/01/2025 10:00'
+    };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('deve mostrar um alerta de erro se a data de aplicação for inválida', async () => {
+
+        await EditarVacina(mockDados, "usuario123", "pet123", mockNavigation);
+
+        expect(Alert.alert).toHaveBeenCalledWith("Erro", "Data de aplicação inválida.");
+        expect(mockNavigation.navigate).not.toHaveBeenCalled();
+    });
+
+    it('deve retornar se os campos não forem válidos', async () => {
+
+        await EditarVacina(mockDados, "usuario123", "pet123", mockNavigation);
+
+        expect(mockNavigation.navigate).not.toHaveBeenCalled();
+        expect(Alert.alert).toHaveBeenCalledWith("Erro", "Data de aplicação inválida.");
+    });
+
+    it('deve mostrar um alerta de erro se ocorrer um erro na função', async () => {
+        (updateDocumento as jest.Mock).mockRejectedValueOnce(new Error('Erro na atualização'));
+
+        await EditarVacina(mockDados, "usuario123", "pet123", mockNavigation);
+
+        expect(Alert.alert).toHaveBeenCalledWith("Erro", "Data de aplicação inválida.");
+    });
+});

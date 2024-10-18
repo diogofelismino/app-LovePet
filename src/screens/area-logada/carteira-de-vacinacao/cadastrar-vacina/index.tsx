@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ContainerAreaLogada from '../../../../components/container-area-logada'
 import CardImagem from '../../../../components/cards/card-imagem'
@@ -14,7 +14,7 @@ import { useUsuario } from '../../../../hooks/useUsuario'
 import { usePet } from '../../../../hooks/usePet'
 import { Button } from 'react-native-paper'
 import { VacinaDto } from '../../../../model/Dto/vacina-dto/vacina-dto'
-import { ExcluirVacina, PegarVacinasId, RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
+import { EditarVacina, ExcluirVacina, PegarVacinasId, RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
 
 export default function CadastrarVacinas() {
     const route: RouteProp<{
@@ -36,6 +36,7 @@ export default function CadastrarVacinas() {
     const [primeira, setPrimeira] = useState<boolean>(false);
 
     useEffect(() => {
+        console.log(route.params)
         if (route?.params?.param?.idCard)
             RecuperarVacinas();
     }, []);
@@ -51,16 +52,14 @@ export default function CadastrarVacinas() {
 
     async function Excluir() {
         setLoading(true);
-
-        await ExcluirVacina(usuario.usuario.id, pet.id, form.id, navigation);
-
+        await ExcluirVacina(usuario.usuario.id, pet.id, form.id, navigation, form.proxima_dose != "" ? true : false);
         setLoading(false);
     }
 
     async function Editar() {
         setLoading(true);
 
-        //await EditarCompromisso(form, usuario.usuario.id, pet.id, navigation, notificar)
+        await EditarVacina(form, usuario.usuario.id, pet.id, navigation)
 
         setLoading(false);
     }
@@ -89,7 +88,7 @@ export default function CadastrarVacinas() {
             <ScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
                 <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
                 <View style={styles.viewCentro}>
-                    {route.params?.param?.idCard == undefined || route.params?.param?.idCard == "" &&
+                    {(route.params?.param?.idCard == undefined || route.params?.param?.idCard == "" )&&
 
                         <View style={{ width: '90%' }}>
                             <Text style={styles.titulo}>Data de aplicação da vacinas anteriores</Text>
@@ -114,19 +113,24 @@ export default function CadastrarVacinas() {
                         iconeRight={"eyedropper"}
                     />
 
-                    <View style={{ width: '90%', marginTop: 15 }}>
-                        <Text style={styles.titulo}>Data da próxima aplicação da vacinas</Text>
-                    </View>
+                    {(route.params?.param?.idCard == undefined || route.params?.param?.idCard == "") &&
+                        <>
+                            <View style={{ width: '90%', marginTop: 15 }}>
+                                <Text style={styles.titulo}>Data da próxima aplicação da vacinas</Text>
+                            </View>
 
-                    <TextInputPerso
-                        titulo={"Data de aplicação"}
-                        setValue={(text: any) => { setForm({ ...form, proxima_dose: text }), setPrimeira(false) }}
-                        value={form.proxima_dose}
-                        iconeRight={"calendar-7"}
-                        validacao={validateDateTime(form.proxima_dose, primeira, false)}
-                        mascara={aplicarMascaraDateTime}
-                        numeroDeDigito={16}
-                    />
+                            <TextInputPerso
+                                titulo={"Data de aplicação"}
+                                setValue={(text: any) => { setForm({ ...form, proxima_dose: text }), setPrimeira(false) }}
+                                value={form.proxima_dose}
+                                iconeRight={"calendar-7"}
+                                validacao={validateDateTime(form.proxima_dose, primeira, false)}
+                                mascara={aplicarMascaraDateTime}
+                                numeroDeDigito={16}
+                            />
+                        </>
+
+                    }
 
                     <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
 

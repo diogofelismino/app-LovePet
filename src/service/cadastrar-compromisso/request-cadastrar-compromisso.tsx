@@ -59,8 +59,6 @@ export async function RegistrarCompromisso(dados: CadastrarCompromissoDto, usuar
     if (!validarCampos(dados)) {
         return;
     }
-    console.log(dados)
-
     var data = dados.data_hora;
     data = mudarData(data);
 
