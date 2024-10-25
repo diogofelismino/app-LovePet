@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import { PetDto } from "../../../src/model/Dto/pets-dto/pet-dto";
-import { calcularIdade, RealizarCadastroPet, validarCampos, verificarIdPet } from "../../../src/service/cadastrar-pet/request-cadastar-pet";
-import { criarDocumento, lerDocumento } from "../../../src/service/request-padrao-firebase";
+import { calcularIdade, RealizarCadastroPet, RealizarEdicaoPet, RealizarExclusaoPet, validarCampos, verificarIdPet } from "../../../src/service/cadastrar-pet/request-cadastar-pet";
+import { criarDocumento, deletarDocumento, lerDocumento, updateDocumento } from "../../../src/service/request-padrao-firebase";
 
 
 
@@ -164,5 +164,87 @@ describe('RealizarCadastroPet', () => {
     await RealizarCadastroPet(mockDados, "usuario123",mockNavigation);
 
     expect(mockNavigation.navigate).toHaveBeenCalledWith('Perfis');
+  });
+});
+
+describe('RealizarEdicaoPet', () => {
+  const mockNavigation = { navigate: jest.fn() };
+  const mockDados = new PetDto(
+    'Nome do Pet',
+    'Raça do Pet',
+    3,
+    'M',
+    '123',
+    '09/2022'
+  );
+  const mockUsuarioId = 'usuario123';
+  const mockDesselecionarPet = jest.fn();
+  const mockSelecionarPet = jest.fn();
+
+  beforeEach(() => {
+      jest.clearAllMocks();
+  });
+
+  it('deve navegar para "Home" quando a edição for bem-sucedida', async () => {
+      (updateDocumento as jest.Mock).mockResolvedValueOnce({ id: '123' });
+
+      await RealizarEdicaoPet(mockDados, mockUsuarioId, mockNavigation, mockDesselecionarPet, mockSelecionarPet);
+
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Home');
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Pet atualizado com sucesso');
+  });
+
+  it('deve exibir mensagem de erro quando a edição falhar', async () => {
+      (updateDocumento as jest.Mock).mockRejectedValueOnce(new Error('Erro ao atualizar'));
+
+      await RealizarEdicaoPet(mockDados, mockUsuarioId, mockNavigation, mockDesselecionarPet, mockSelecionarPet);
+
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Ocorreu um erro ao tentar Editar o Pet, tente novemante mais tarde.');
+  });
+});
+
+describe('RealizarExclusaoPet', () => {
+  const mockNavigation = { navigate: jest.fn() };
+  const mockUsuarioId = 'usuario123';
+  const mockPetId = 'pet123';
+  const mockDesselecionarPet = jest.fn();
+
+  beforeEach(() => {
+      jest.clearAllMocks();
+  });
+
+  it('deve excluir o pet e navegar para "Perfis" quando a exclusão for bem-sucedida', async () => {
+      // Mock da função deletarDocumento para simular uma exclusão bem-sucedida
+      (deletarDocumento as jest.Mock).mockResolvedValueOnce({});
+
+      await RealizarExclusaoPet(mockUsuarioId, mockPetId, mockNavigation, mockDesselecionarPet);
+
+      // Verifica se o documento foi excluído com os parâmetros corretos
+      expect(deletarDocumento).toHaveBeenCalledWith(`Usuario/${mockUsuarioId}/pets/`, mockPetId);
+
+      // Verifica se a função desselecionarPet foi chamada
+      expect(mockDesselecionarPet).toHaveBeenCalled();
+
+      // Verifica se a mensagem de sucesso foi exibida
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Pet foi excluido com sucesso');
+
+      // Verifica se a navegação foi chamada corretamente
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Perfis');
+  });
+
+  it('deve exibir alerta de erro se a exclusão falhar', async () => {
+      // Mock para simular uma falha na exclusão do documento
+      (deletarDocumento as jest.Mock).mockRejectedValueOnce(new Error('Erro ao excluir documento'));
+
+      await RealizarExclusaoPet(mockUsuarioId, mockPetId, mockNavigation, mockDesselecionarPet);
+
+      // Verifica se a função deletarDocumento foi chamada com os parâmetros corretos
+      expect(deletarDocumento).toHaveBeenCalledWith(`Usuario/${mockUsuarioId}/pets/`, mockPetId);
+
+      // Verifica se a mensagem de erro foi exibida
+      expect(Alert.alert).toHaveBeenCalledWith('Aviso', 'Ocorreu um erro ao tentar Excluir o Pet, tente novemante mais tarde.');
+
+      // Verifica que a navegação NÃO foi chamada
+      expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });
 });

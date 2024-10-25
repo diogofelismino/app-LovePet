@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ContainerAreaLogada from '../../../components/container-area-logada'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -95,6 +95,7 @@ export default function CadastrarCompromisso() {
             >
             <ScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
                 <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
+                {/* <Image source={logoImg} style={{width:'100%', height:100}} resizeMode='contain'/> */}
                 <View style={styles.viewCentro}>
                     <TextInputPerso
                         titulo={"Título"}

@@ -36,7 +36,6 @@ export default function CadastrarVacinas() {
     const [primeira, setPrimeira] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log(route.params)
         if (route?.params?.param?.idCard)
             RecuperarVacinas();
     }, []);

@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
 
 
-const styles = (backgroundColor: string = "#FFF", usaScroll: boolean = false) => StyleSheet.create({
+const styles = (backgroundColor: string = "#FFF", usaScroll: boolean = false, sombra: boolean = true) => StyleSheet.create({
+
     card: {
         backgroundColor: backgroundColor,
         borderRadius: 10,
@@ -12,17 +13,18 @@ const styles = (backgroundColor: string = "#FFF", usaScroll: boolean = false) =>
         padding: 20,
         alignItems: "center",
         justifyContent: "center",
-        elevation: 5,
+        elevation: sombra ? 5 : 0,
 
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: sombra ? 2 : 0,
         },
-        shadowOpacity: 0.2,
-        shadowRadius: 3.84,
+        shadowOpacity: sombra ? 0.2 : 0,
+        shadowRadius: sombra ? 3.84 : 0,
 
         height: usaScroll ? 200 : 0,
+        minHeight: usaScroll ? 0 : 200,
         flex: usaScroll ? 0 : 1
     }
 })

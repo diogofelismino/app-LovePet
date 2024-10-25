@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
 import { PetDto } from "../../model/Dto/pets-dto/pet-dto";
-import { criarDocumento, lerDocumento } from "../request-padrao-firebase";
+import { criarDocumento, deletarDocumento, lerDocumento, updateDocumento } from "../request-padrao-firebase";
 
 export const validarCampos = (dados: PetDto) => {
 
@@ -68,4 +68,36 @@ export async function RealizarCadastroPet(dados: PetDto, usuarioId: any, navigat
         navigation.navigate("Perfis");
     else
         Alert.alert("Aviso", "Ocorreu um erro ao tentar Cadastrar o Pet, tente novemante mais tarde.")
+}
+
+export async function RealizarEdicaoPet(dados: PetDto, usuarioId: any, navigation: any, desselecionarPet:any, selecionarPet:any) {
+    try{
+        if (!validarCampos(dados)) {
+            return;
+        }
+    
+        await updateDocumento(`Usuario/${usuarioId}/pets`,  dados.id, dados,);
+        await desselecionarPet();
+        await selecionarPet(dados)
+
+        Alert.alert("Aviso", "Pet atualizado com sucesso");
+        navigation.navigate("Home");
+    }
+    catch(error){
+        Alert.alert("Aviso", "Ocorreu um erro ao tentar Editar o Pet, tente novemante mais tarde.")
+    }
+}
+
+export async function RealizarExclusaoPet(usuarioId: any, petId: any, navigation: any,  desselecionarPet:any) {
+    try {
+
+        await deletarDocumento(`Usuario/${usuarioId}/pets/`, petId);
+        
+        await desselecionarPet();
+
+        Alert.alert("Aviso", "Pet foi excluido com sucesso");
+        navigation.navigate("Perfis");
+    } catch (error) {
+        Alert.alert("Aviso", "Ocorreu um erro ao tentar Excluir o Pet, tente novemante mais tarde.");
+    }
 }
