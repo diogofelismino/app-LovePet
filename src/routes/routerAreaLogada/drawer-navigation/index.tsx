@@ -9,10 +9,13 @@ import DrawerDashBoardComponent from './componente-drawer-navigation';
 import RouterAgenda from './router-agenda';
 import RouterVacina from './router-vacina';
 import CadastrarPet from '../../../screens/area-logada/cadastrar-pet';
+import EditarUsuario from '../../../screens/area-logada/editar-usuario';
+import RouterHome from './router-home';
 
 const Drawer = createDrawerNavigator();
 
 export default function RouterHomeDrawerNavigation() {
+    var teste =true;
     return (
         <Drawer.Navigator
             initialRouteName='Home'
@@ -57,10 +60,14 @@ export default function RouterHomeDrawerNavigation() {
                 }
             })}
         >
-            <Drawer.Screen name='Home' component={Home} />
+            <Drawer.Screen name='Home' component={RouterHome} />
             <Drawer.Screen name="Vacinas" component={RouterVacina} />
             <Drawer.Screen name="Agenda" component={RouterAgenda} />
             <Drawer.Screen name="Perfil Do Pet" component={CadastrarPet} initialParams={{param:true}} />
+            {!teste &&
+                <Drawer.Screen name="EditarUsuario" component={EditarUsuario}/>
+
+            }
 
         </Drawer.Navigator>
     )

@@ -76,6 +76,7 @@ export default function CadastrarCompromisso() {
         const compromisso = dado as CompromissoDto;      
         setForm({...form, titulo: compromisso.titulo, data_hora: converterDataParaString(new Date(compromisso.data_hora)), descricao: compromisso.descricao, id: compromisso.id});
 
+        console.log(compromisso.data_hora)
 
         if(new Date(compromisso.data_hora) > new Date())
             setNotficar(true);

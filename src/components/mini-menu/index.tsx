@@ -48,7 +48,7 @@ export default function MiniMenu() {
                 contentStyle={styles.viewContent}
                 >
             
-                <Menu.Item onPress={() => { }} title="Atualizar meus dados"  style={{ borderRadius:20}}/>
+                <Menu.Item onPress={() => navigation.navigate("EditarUsuario")} title="Atualizar meus dados"  style={{ borderRadius:20}}/>
                 <Menu.Item onPress={sair} title="Sair" style={{ borderRadius:20}}/>
           
             </Menu>

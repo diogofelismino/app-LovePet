@@ -25,6 +25,7 @@ export default function RouterAreaLogada() {
         <Stack.Screen name='Perfis' component={Perfis}/>     
         <Stack.Screen name='RouterHomeDrawerNavigation' component={RouterHomeDrawerNavigation}/>     
         <Stack.Screen name='CadastrarPet' component={CadastrarPet}/> 
+        
     </Stack.Navigator>
   )
 }
