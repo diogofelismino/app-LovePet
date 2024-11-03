@@ -26,6 +26,14 @@ const estilos = StyleSheet.create({
         
     },
 
+    textInputDisabled:{
+        backgroundColor:colors.BACKGROUND_INPUT_DISEBLED,
+        width:'90%',
+        marginVertical:5,
+
+        
+    },
+
     textInputError:{
         backgroundColor:colors.BACKGROUND_INPUT,
         width:'90%',

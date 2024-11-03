@@ -2,6 +2,7 @@ export const BACKGROUND_PINK = "#ED6190";
 export const BACKGROUND_GERAL = "#FCF7FB"
 export const COLOR_BUTTON = "#E5195E";
 export const BACKGROUND_INPUT = "#F2E8EB";
+export const BACKGROUND_INPUT_DISEBLED = "#CECECE";
 export const COLOR_FONT_INPUT = "#BE91A0";
 export const BACKGROUND_HEARDER = "#DF82A1"
 export const COLOR_FONT_CARD = "#964F66";

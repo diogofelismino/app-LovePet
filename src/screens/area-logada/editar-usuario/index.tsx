@@ -11,15 +11,17 @@ import styles from './styles'
 import { aplicarMascaraCPF } from '../../../utils/mascara'
 import { UsuarioEditarDto } from '../../../model/Dto/editar-usuario-dto/editar-usuario-dto'
 import { useUsuario } from '../../../hooks/useUsuario'
+import { EditarDadoUsuario } from '../../../service/editar-usuario/editar-usuario'
 
 export default function EditarUsuario() {
 
     const navigation = useNavigation<any>();
     const { setLoading } = useLoading();
-    const { usuario } = useUsuario();
+    const { usuario, signIn } = useUsuario();
     const foco = useIsFocused();
 
     const [form, setForm] = useState<UsuarioEditarDto>(new UsuarioEditarDto(
+        "",
         "",
         "",
         "",
@@ -36,13 +38,24 @@ export default function EditarUsuario() {
 
     async function EditarUsuario() {
         setLoading(true);
+        await EditarDadoUsuario(form, navigation, signIn);
+
+
 
         setLoading(false);
     }
 
     async function RecuperarUsuario() {
         setLoading(true);
-        setForm({ ...form, cpf: usuario.usuario.cpf, email: usuario.usuario.email, nome: usuario.usuario.nome });
+        setForm({ 
+            ...form, 
+            id: usuario.usuario.id, 
+            cpf: usuario.usuario.cpf, 
+            email: usuario.usuario.email, 
+            nome: usuario.usuario.nome, 
+            senhaCripitografada: usuario.usuario.senha, 
+            token: usuario.token
+        });
         setLoading(false);
     }
 
@@ -57,6 +70,7 @@ export default function EditarUsuario() {
                     iconeRight={"at-3"}
                     validacao={validaEmail(form.email)}
                     tipoTeclado='email-address'
+                    bloquearCampo
 
                 />
                 <TextInputPerso
@@ -98,7 +112,7 @@ export default function EditarUsuario() {
                     iconeRight={"key-3"}
                 />
 
-                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => console.log("")}>
+                <Button mode="contained" textColor='#FFF' style={styles.botao} onPress={() => EditarUsuario()}>
                     Salvar
                 </Button>
             </View>

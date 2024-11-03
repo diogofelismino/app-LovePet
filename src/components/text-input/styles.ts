@@ -6,6 +6,9 @@ const styles = StyleSheet.create({
 
     input:{
         ...estilos.textInput
+    },
+    inputDisebled:{
+        ...estilos.textInputDisabled
     }
 });
 

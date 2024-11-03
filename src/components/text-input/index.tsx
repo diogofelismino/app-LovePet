@@ -68,10 +68,17 @@ interface TextInputPersoProps {
     */
     tipoTeclado?: KeyboardType
 
+    /**
+    * Deve passar quando quiser bloquear o campo
+    * @type {boolean}
+    * @default false
+    */
+    bloquearCampo?: boolean
+
 }
 
 
-export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "", mascara = null, numeroDeDigito, tipoTeclado = "default"}: TextInputPersoProps) {
+export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "", mascara = null, numeroDeDigito, tipoTeclado = "default", bloquearCampo = false}: TextInputPersoProps) {
 
     const Label = <Text style={{ color: COLOR_FONT_INPUT }}>{titulo}</Text>;
 
@@ -82,7 +89,7 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
             onChangeText={text => setValue(mascara == null ? text : mascara(text))}
             mode='outlined'
             textColor={COLOR_FONT_INPUT}
-            style={styles.input}
+            style={ bloquearCampo ? styles.inputDisebled : styles.input}
             activeOutlineColor={validacao || value.length == 0 ? COLOR_FONT_INPUT : "red"}
             outlineColor={validacao || value.length == 0 ? 'transparent' : "red"}
             theme={
@@ -93,7 +100,7 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
             right={iconeRight != "" ? <TextInput.Icon icon={() => (<Icon name={iconeRight} color={COLOR_FONT_INPUT} size={18}/>)}  disabled/> : null}
             maxLength={numeroDeDigito}
             keyboardType={tipoTeclado}
-          
+            disabled={bloquearCampo}
         />
     )
 }
