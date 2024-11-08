@@ -17,6 +17,7 @@ import { EditarCompromisso, ExcluirCompromisso, PegarCompromisso, RegistrarCompr
 import { converterDataParaString, mudarData, validateDateTime } from '../../../utils/util'
 import { aplicarMascaraDateTime } from '../../../utils/mascara'
 import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-dto'
+import DatePicker from 'react-native-date-picker'
 
 
 export default function CadastrarCompromisso() {
@@ -24,8 +25,8 @@ export default function CadastrarCompromisso() {
     const route: RouteProp<{
         params: {
             param: {
-                idCard:any
-                retorno:boolean
+                idCard: any
+                retorno: boolean
             }
         }
     }, 'params'> = useRoute();
@@ -39,9 +40,12 @@ export default function CadastrarCompromisso() {
     const [notificar, setNotficar] = useState<boolean>(false);
     const [primeira, setPrimeira] = useState(false);
 
+    const [open, setOpen] = useState(false);
+    const [date, setDate] = useState<Date>(new Date());
+
 
     useEffect(() => {
-        if(route?.params?.param?.idCard)
+        if (route?.params?.param?.idCard)
             RecuperarCompromisso();
     }, []);
 
@@ -73,27 +77,27 @@ export default function CadastrarCompromisso() {
     async function RecuperarCompromisso() {
         setLoading(true);
         const dado = await PegarCompromisso(usuario.usuario.id, pet.id, route.params.param.idCard);
-        const compromisso = dado as CompromissoDto;      
-        setForm({...form, titulo: compromisso.titulo, data_hora: converterDataParaString(new Date(compromisso.data_hora)), descricao: compromisso.descricao, id: compromisso.id});
+        const compromisso = dado as CompromissoDto;
+        setForm({ ...form, titulo: compromisso.titulo, data_hora: converterDataParaString(new Date(compromisso.data_hora)), descricao: compromisso.descricao, id: compromisso.id });
 
-        console.log(compromisso.data_hora)
+        setDate(new Date(compromisso.data_hora));
 
-        if(new Date(compromisso.data_hora) > new Date())
+        if (new Date(compromisso.data_hora) > new Date())
             setNotficar(true);
 
         setPrimeira(true);
 
-        
 
+    console.log(date)
         setLoading(false);
     }
 
     return (
-        <ContainerAreaLogada 
+        <ContainerAreaLogada
             nomeTela={route.params?.param?.idCard == undefined || route.params?.param?.idCard == "" ? 'Agenda' : "Alterar dados da agenda"}
-            iconBack 
-            nomeTelaRetorno={route?.params?.param?.retorno ? "Agenda"  : ""}
-            >
+            iconBack
+            nomeTelaRetorno={route?.params?.param?.retorno ? "Agenda" : ""}
+        >
             <ScrollView style={{ flex: 1, width: '100%' }} showsVerticalScrollIndicator={false}>
                 <CardImagem image={logoImg} backgroundColor={color.BACKGROUND_CARD_01} usaScroll />
                 {/* <Image source={logoImg} style={{width:'100%', height:100}} resizeMode='contain'/> */}
@@ -105,13 +109,36 @@ export default function CadastrarCompromisso() {
                     />
                     <TextInputPerso
                         titulo={"Data"}
-                        setValue={(text: any) =>{ setForm({ ...form, data_hora: text }), setPrimeira(false)}}
+                        setValue={(text: any) => { }}
                         value={form.data_hora}
                         iconeRight={"calendar-7"}
                         validacao={validateDateTime(form.data_hora, primeira)}
                         mascara={aplicarMascaraDateTime}
                         numeroDeDigito={16}
+                        abrirData={setOpen}
+
                     />
+
+                    <DatePicker
+                        modal
+                        open={open}
+                        confirmText={'Confirmar'}
+                        style={{ borderWidth: 0 }}
+                        cancelText={'Cancelar'}
+                        title={'Selecione a Data e Hora'}
+                        date={date}
+                        locale={'pt_BR'}
+                        mode="datetime"
+                        onConfirm={(dateConfirm) => {
+                            console.log(dateConfirm)
+                            setOpen(false);
+                            setForm({ ...form, data_hora: converterDataParaString(new Date(dateConfirm)) }), setPrimeira(false)
+                            // setErroTemp(true);
+                        }}
+                        onCancel={() => setOpen(false)}
+                    />
+
+
                     <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center', marginVertical: 25, justifyContent: 'flex-start' }}>
 
                         <Switch value={notificar} onValueChange={setNotficar} color={color.COLOR_BUTTON} />

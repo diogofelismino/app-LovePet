@@ -75,10 +75,12 @@ interface TextInputPersoProps {
     */
     bloquearCampo?: boolean
 
+    abrirData?:any
+
 }
 
 
-export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "", mascara = null, numeroDeDigito, tipoTeclado = "default", bloquearCampo = false}: TextInputPersoProps) {
+export default function TextInputPerso({ titulo, setValue, value, ehSenha = false, validacao = true, iconeRight = "", mascara = null, numeroDeDigito, tipoTeclado = "default", bloquearCampo = false, abrirData}: TextInputPersoProps) {
 
     const Label = <Text style={{ color: COLOR_FONT_INPUT }}>{titulo}</Text>;
 
@@ -101,6 +103,9 @@ export default function TextInputPerso({ titulo, setValue, value, ehSenha = fals
             maxLength={numeroDeDigito}
             keyboardType={tipoTeclado}
             disabled={bloquearCampo}
+            onFocus={() => {
+                abrirData ? abrirData(true) : false
+            }}
         />
     )
 }
