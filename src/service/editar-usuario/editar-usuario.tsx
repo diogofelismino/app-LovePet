@@ -53,8 +53,6 @@ export async function AtualizarSenha(senhaAtual: any, novaSenha: any) {
 
         return ""
     } catch (error) {
-        console.log("diogo")
-        console.log(error)
         const firebaseError = error as { code: string };
         if (firebaseError.code) {
            

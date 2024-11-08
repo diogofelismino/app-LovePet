@@ -146,3 +146,10 @@ export function converterDataParaString(data: Date): string {
   // Retorna a string formatada
   return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
 }
+
+export  const combineDateAndTime = (date:any, hora: any, minuto:any) => {
+  const combined = new Date(date);
+  combined.setHours(hora);
+  combined.setMinutes(minuto);
+  return combined;
+};

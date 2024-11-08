@@ -16,6 +16,7 @@ import { Button } from 'react-native-paper'
 import { VacinaDto } from '../../../../model/Dto/vacina-dto/vacina-dto'
 import { EditarVacina, ExcluirVacina, PegarVacinasId, RegistrarVacina } from '../../../../service/carteira-de-vacina/carteira-de-vacina'
 import DatePicker from 'react-native-date-picker'
+import DataPicker from '../../../../components/date-picker'
 
 export default function CadastrarVacinas() {
     const route: RouteProp<{
@@ -115,24 +116,13 @@ export default function CadastrarVacinas() {
                         numeroDeDigito={16}
                         abrirData={setOpen}
                     />
-
-                    <DatePicker
-                        modal
+                    <DataPicker
                         open={open}
-                        confirmText={'Confirmar'}
-                        style={{ borderWidth: 0 }}
-                        cancelText={'Cancelar'}
-                        title={'Selecione a Data e Hora'}
-                        date={date}
-                        locale={'pt_BR'}
-                        mode="datetime"
-                        onConfirm={(dateConfirm) => {
-                            console.log(dateConfirm)
-                            setOpen(false);
-                            setForm({ ...form, data_aplicacao: converterDataParaString(new Date(dateConfirm)) }), setPrimeira(false)
-                            // setErroTemp(true);
-                        }}
-                        onCancel={() => setOpen(false)}
+                        setOpen={setOpen}
+                        data={date}
+                        setData={setDate}
+                        setPrimeira={setPrimeira}
+                        onRetornoDataHora={(retorno) => setForm({ ...form, data_aplicacao: converterDataParaString(new Date(retorno)) })}
                     />
 
 
@@ -160,28 +150,17 @@ export default function CadastrarVacinas() {
                                 abrirData={setOpen2}
                             />
 
-                            <DatePicker
-                                modal
+
+                            <DataPicker
                                 open={open2}
-                                confirmText={'Confirmar'}
-                                style={{ borderWidth: 0 }}
-                                cancelText={'Cancelar'}
-                                title={'Selecione a Data e Hora'}
-                                date={date2}
-                                locale={'pt_BR'}
-                                mode="datetime"
-                                onConfirm={(dateConfirm) => {
-                                    setOpen2(false);
-                                    setForm({ ...form, proxima_dose: converterDataParaString(new Date(dateConfirm)) }), setPrimeira(false)
-                                    // setErroTemp(true);
-                                }}
-                                onCancel={() => setOpen2(false)}
+                                setOpen={setOpen2}
+                                data={date2}
+                                setData={setDate2}
+                                setPrimeira={setPrimeira}
+                                onRetornoDataHora={(retorno) => setForm({ ...form, proxima_dose: converterDataParaString(new Date(retorno)) })}
                             />
-
                         </>
-
                     }
-
                     <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
 
                         {route.params?.param == undefined || route.params?.param?.idCard == "" ?

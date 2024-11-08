@@ -1,5 +1,5 @@
 import { lerDocumento } from "../../src/service/request-padrao-firebase";
-import { converterDataParaString, cripitografarSenha, mudarData, validaEmail, validarCPF, validateDateTime, verificarId } from "../../src/utils/util"
+import { combineDateAndTime, converterDataParaString, cripitografarSenha, mudarData, validaEmail, validarCPF, validateDateTime, verificarId } from "../../src/utils/util"
 
 
 jest.mock('../../src/service/request-padrao-firebase');
@@ -217,5 +217,46 @@ describe('converterDataParaString', () => {
     const resultado = converterDataParaString(data);
     
     expect(resultado).toBe('10/10/2024 23:59'); // Verifica se a conversão está correta
+  });
+});
+
+describe('combineDateAndTime', () => {
+  it('deve combinar data, hora e minuto corretamente', () => {
+    const date = new Date('2023-11-08T00:00:00');
+    const hora = 15;
+    const minuto = 30;
+
+    const result = combineDateAndTime(date, hora, minuto);
+
+    // Verificar se o ano, mês e dia correspondem ao valor de "date"
+    expect(result.getFullYear()).toBe(date.getFullYear());
+    expect(result.getMonth()).toBe(date.getMonth());
+    expect(result.getDate()).toBe(date.getDate());
+
+    // Verificar se a hora e o minuto foram definidos corretamente
+    expect(result.getHours()).toBe(hora);
+    expect(result.getMinutes()).toBe(minuto);
+  });
+
+  it('deve funcionar corretamente com horas e minutos iguais a zero', () => {
+    const date = new Date('2023-11-08T00:00:00');
+    const hora = 0;
+    const minuto = 0;
+
+    const result = combineDateAndTime(date, hora, minuto);
+
+    expect(result.getHours()).toBe(hora);
+    expect(result.getMinutes()).toBe(minuto);
+  });
+
+  it('deve funcionar corretamente com horas e minutos no limite', () => {
+    const date = new Date('2023-11-08T00:00:00');
+    const hora = 23;
+    const minuto = 59;
+
+    const result = combineDateAndTime(date, hora, minuto);
+
+    expect(result.getHours()).toBe(hora);
+    expect(result.getMinutes()).toBe(minuto);
   });
 });

@@ -14,10 +14,11 @@ import { useLoading } from '../../../hooks/useLoading'
 import { useUsuario } from '../../../hooks/useUsuario'
 import { usePet } from '../../../hooks/usePet'
 import { EditarCompromisso, ExcluirCompromisso, PegarCompromisso, RegistrarCompromisso } from '../../../service/cadastrar-compromisso/request-cadastrar-compromisso'
-import { converterDataParaString, mudarData, validateDateTime } from '../../../utils/util'
+import { combineDateAndTime, converterDataParaString, mudarData, validateDateTime } from '../../../utils/util'
 import { aplicarMascaraDateTime } from '../../../utils/mascara'
 import { CompromissoDto } from '../../../model/Dto/compromisso-dto/compromisso-dto'
 import DatePicker from 'react-native-date-picker'
+import DataPicker from '../../../components/date-picker'
 
 
 export default function CadastrarCompromisso() {
@@ -42,6 +43,8 @@ export default function CadastrarCompromisso() {
 
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date>(new Date());
+    const [open2, setOpen2] = useState(false);
+    const [time, setTime] = useState<Date>(new Date());
 
 
     useEffect(() => {
@@ -86,9 +89,6 @@ export default function CadastrarCompromisso() {
             setNotficar(true);
 
         setPrimeira(true);
-
-
-    console.log(date)
         setLoading(false);
     }
 
@@ -119,25 +119,14 @@ export default function CadastrarCompromisso() {
 
                     />
 
-                    <DatePicker
-                        modal
+                    <DataPicker
                         open={open}
-                        confirmText={'Confirmar'}
-                        style={{ borderWidth: 0 }}
-                        cancelText={'Cancelar'}
-                        title={'Selecione a Data e Hora'}
-                        date={date}
-                        locale={'pt_BR'}
-                        mode="datetime"
-                        onConfirm={(dateConfirm) => {
-                            console.log(dateConfirm)
-                            setOpen(false);
-                            setForm({ ...form, data_hora: converterDataParaString(new Date(dateConfirm)) }), setPrimeira(false)
-                            // setErroTemp(true);
-                        }}
-                        onCancel={() => setOpen(false)}
+                        setOpen={setOpen}
+                        data={date}
+                        setData={setDate}
+                        setPrimeira={setPrimeira}
+                        onRetornoDataHora={(retorno) => setForm({ ...form, data_hora: converterDataParaString(new Date(retorno)) })}
                     />
-
 
                     <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center', marginVertical: 25, justifyContent: 'flex-start' }}>
 
